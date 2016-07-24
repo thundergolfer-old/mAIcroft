@@ -25,7 +25,7 @@ Example
 -------
 Command:
 
-    python maicroft.py orionmelt
+    python maicroft.py thundergolfer
 
 Output:
 

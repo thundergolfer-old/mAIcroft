@@ -16,6 +16,7 @@ import pytz
 
 from subreddits import subreddits_dict, ignore_text_subs, default_subs
 from text_parser import TextParser
+from reddit_objects import Post, Submission, Comment
 
 parser = TextParser()
 
@@ -35,7 +36,7 @@ class Util:
     def sanitize_text(text):
         """
         Returns text after removing unnecessary parts.
-        
+
         """
 
         MAX_WORD_LENGTH = 1024
@@ -67,7 +68,7 @@ class Util:
     def coalesce(l):
         """
         Given a list, returns the last element that is not equal to "generic".
-        
+
         """
 
         l = [x for x in l if x.lower() != "generic"]
@@ -77,7 +78,7 @@ class Util:
     def humanize_days(days):
         """
         Return text with years, months and days given number of days.
-        
+
         """
         y = days/365 if days > 365 else 0
         m = (days - y*365)/31 if days > 30 else 0
@@ -100,86 +101,17 @@ class Util:
         """
         return ((val - src[0])/(src[1] - src[0])) * (dst[1]-dst[0]) + dst[0]
 
-# Base class for comments and submissions
-class Post(object):
-    """
-    A class for "posts" - a post can either be a submission or a comment.
-
-    """
-
-    def __init__(
-        self, id, subreddit, text, created_utc, score, permalink, gilded
-    ):
-        # Post id
-        self.id = id
-        # Subreddit in which this comment or submission was posted
-        self.subreddit = subreddit
-        # For comments, the comment body and for submissions, the self-text
-        self.text = text
-        # UTC timestamp when post was created
-        self.created_utc = created_utc
-        # Post score
-        self.score = score
-        # Permalink to post
-        self.permalink = permalink
-        # Gilded
-        self.gilded = gilded
-        
-
-class Comment(Post):
-    """
-    A class for comments derived from Post.
-    
-    """
-    
-    def __init__(
-        self, id, subreddit, text, created_utc, score, 
-        permalink, submission_id, edited, top_level, gilded
-    ):
-        super(Comment, self).__init__(
-            id, subreddit, text, created_utc, score, permalink, gilded
-        )
-        # Link ID where comment was posted
-        self.submission_id = submission_id
-        # Edited flag
-        self.edited = edited
-        # Top-level flag
-        self.top_level = top_level
-
-
-class Submission(Post):
-    """
-    A class for submissions derived from Post.
-    
-    """
-
-    def __init__(
-        self, id, subreddit, text, created_utc, score, 
-        permalink, url, title, is_self, gilded, domain
-    ):
-        super(Submission, self).__init__(
-            id, subreddit, text, created_utc, score, permalink, gilded
-        )
-        # Submission link URL
-        self.url = url
-        # Submission title
-        self.title = title
-        # Self post?
-        self.is_self = is_self
-        # Domain
-        self.domain = domain
-
 
 class RedditUser:
     """
-    Models a redditor object. Contains methods for processing 
+    Models a redditor object. Contains methods for processing
     comments and submissions.
-    
+
     """
 
-    # If user has posted in a sub 3 times or more, they are 
+    # If user has posted in a sub 3 times or more, they are
     # probably interested in the topic.
-    MIN_THRESHOLD = 3 
+    MIN_THRESHOLD = 3
     MIN_THRESHOLD_FOR_DEFAULT = 10
     HEADERS = {
         'User-Agent': 'Sherlock v0.1 by /u/orionmelt'
@@ -289,19 +221,19 @@ class RedditUser:
             "name" : "All",
             "children" : [
                 {
-                    "name" : "Self", 
+                    "name" : "Self",
                     "children" : []
                 },
                 {
-                    "name" : "Image", 
+                    "name" : "Image",
                     "children" : []
                 },
                 {
-                    "name" : "Video", 
+                    "name" : "Video",
                     "children" : []
                 },
                 {
-                    "name" : "Other", 
+                    "name" : "Other",
                     "children" : []
                 }
             ]
@@ -309,10 +241,10 @@ class RedditUser:
 
         self.metrics["date"] = [
             {
-                "date" : (year, month), 
-                "comments" : 0, 
-                "submissions": 0, 
-                "comment_karma": 0, 
+                "date" : (year, month),
+                "comments" : 0,
+                "submissions": 0,
+                "comment_karma": 0,
                 "submission_karma": 0
             } for (year, month) in sorted(
                 list(
@@ -329,23 +261,23 @@ class RedditUser:
         self.metrics["heatmap"] = [0] * 24 * 61
         self.metrics["recent_karma"] = [0] * 61
         self.metrics["recent_posts"] = [0] * 61
-        
+
         self.metrics["hour"] = [
             {
-                "hour": hour, 
-                "comments": 0, 
-                "submissions": 0, 
-                "comment_karma": 0, 
+                "hour": hour,
+                "comments": 0,
+                "submissions": 0,
+                "comment_karma": 0,
                 "submission_karma": 0
             } for hour in range(0, 24)
         ]
 
         self.metrics["weekday"] = [
             {
-                "weekday": weekday, 
-                "comments": 0, 
-                "submissions": 0, 
-                "comment_karma": 0, 
+                "weekday": weekday,
+                "comments": 0,
+                "submissions": 0,
+                "comment_karma": 0,
                 "submission_karma": 0
             } for weekday in range(0, 7)
         ]
@@ -374,7 +306,7 @@ class RedditUser:
 
         self.possessions = []
         self.possessions_extra = []
-        
+
         self.actions = []
         self.actions_extra = []
 
@@ -394,10 +326,10 @@ class RedditUser:
         }
 
         self.corpus = ""
-        
+
         self.commented_dates = []
         self.submitted_dates = []
-        
+
         self.lurk_period = None
 
         self.comments_gilded = 0
@@ -450,9 +382,9 @@ class RedditUser:
             response = requests.get(url, headers=self.HEADERS)
             response_json = response.json()
 
-            # TODO - Error handling for user not found (404) and 
+            # TODO - Error handling for user not found (404) and
             # rate limiting (429) errors
-            
+
             for child in response_json["data"]["children"]:
                 id = child["data"]["id"].encode("ascii", "ignore")
                 subreddit = child["data"]["subreddit"].\
@@ -468,7 +400,7 @@ class RedditUser:
                 gilded = child["data"]["gilded"]
                 permalink = "http://www.reddit.com/r/%s/comments/%s/_/%s" \
                     % (subreddit, submission_id, id)
-                
+
                 comment = Comment(
                     id=id,
                     subreddit=subreddit,
@@ -481,17 +413,17 @@ class RedditUser:
                     top_level=top_level,
                     gilded=gilded
                 )
-                
+
                 comments.append(comment)
 
             after = response_json["data"]["after"]
 
             if after:
                 url = base_url + "&after=%s" % after
-                # reddit may rate limit if we don't wait for 2 seconds 
-                # between successive requests. If that happens, 
+                # reddit may rate limit if we don't wait for 2 seconds
+                # between successive requests. If that happens,
                 # uncomment and increase sleep time in the following line.
-                #time.sleep(0.5) 
+                #time.sleep(0.5)
             else:
                 more_comments = False
 
@@ -501,7 +433,7 @@ class RedditUser:
     def get_submissions(self, limit=None):
         """
         Returns a list of redditor's submissions.
-        
+
         """
 
         submissions = []
@@ -514,9 +446,9 @@ class RedditUser:
             response = requests.get(url, headers=self.HEADERS)
             response_json = response.json()
 
-            # TODO - Error handling for user not found (404) and 
+            # TODO - Error handling for user not found (404) and
             # rate limiting (429) errors
-            
+
             for child in response_json["data"]["children"]:
                 id = child["data"]["id"].encode("ascii","ignore")
                 subreddit = child["data"]["subreddit"].\
@@ -533,7 +465,7 @@ class RedditUser:
                 is_self = child["data"]["is_self"]
                 gilded = child["data"]["gilded"]
                 domain = child["data"]["domain"]
-                
+
                 submission = Submission(
                     id=id,
                     subreddit=subreddit,
@@ -546,7 +478,7 @@ class RedditUser:
                     is_self=is_self,
                     gilded=gilded,
                     domain=domain
-                )               
+                )
 
                 submissions.append(submission)
 
@@ -554,10 +486,10 @@ class RedditUser:
 
             if after:
                 url = base_url + "&after=%s" % after
-                # reddit may rate limit if we don't wait for 2 seconds 
-                # between successive requests. If that happens, 
+                # reddit may rate limit if we don't wait for 2 seconds
+                # between successive requests. If that happens,
                 # uncomment and increase sleep time in the following line.
-                #time.sleep(0.5) 
+                #time.sleep(0.5)
             else:
                 more_submissions = False
 
@@ -566,7 +498,7 @@ class RedditUser:
 
     def process(self):
         """
-        Retrieves redditor's comments and submissions and 
+        Retrieves redditor's comments and submissions and
         processes each of them.
 
         """
@@ -576,11 +508,11 @@ class RedditUser:
 
         if self.submissions:
             self.process_submissions()
-        
+
         if self.comments or self.submissions:
             self.derive_attributes()
 
-    
+
     def process_comments(self):
         """
         Process list of redditor's comments.
@@ -589,7 +521,7 @@ class RedditUser:
 
         if not self.comments:
             return
-        
+
         self.earliest_comment = self.comments[-1]
         self.latest_comment = self.comments[0]
 
@@ -608,7 +540,7 @@ class RedditUser:
 
         if not self.submissions:
             return
-        
+
         self.earliest_submission = self.submissions[-1]
         self.latest_submission = self.submissions[0]
 
@@ -653,11 +585,11 @@ class RedditUser:
             self.metrics["recent_posts"][
                 (comment_timestamp.date() - days_ago_60).days
             ] += 1
-        
+
         # Update metrics
         for i, d in enumerate(self.metrics["date"]):
             if d["date"] == (
-                comment_timestamp.date().year, 
+                comment_timestamp.date().year,
                 comment_timestamp.date().month
             ):
                 d["comments"] += 1
@@ -684,8 +616,8 @@ class RedditUser:
         elif comment.score < self.worst_comment.score:
             self.worst_comment = comment
 
-        # If comment is in a subreddit in which comments/self text 
-        # are to be ignored (such as /r/jokes, /r/writingprompts, etc), 
+        # If comment is in a subreddit in which comments/self text
+        # are to be ignored (such as /r/jokes, /r/writingprompts, etc),
         # do not process it further.
         if comment.subreddit in ignore_text_subs:
             return False
@@ -693,7 +625,7 @@ class RedditUser:
         # If comment text does not contain "I" or "my", why even bother?
         if not re.search(r"\b(i|my)\b", text, re.I):
             return False
-        
+
         # Now, this is a comment that needs to be processed.
         (chunks, sentiments) = parser.extract_chunks(text)
         self.sentiments += sentiments
@@ -739,7 +671,7 @@ class RedditUser:
 
         for i, d in enumerate(self.metrics["date"]):
             if d["date"] == (
-                submission_timestamp.date().year, 
+                submission_timestamp.date().year,
                 submission_timestamp.date().month
             ):
                 d["submissions"] += 1
@@ -764,12 +696,12 @@ class RedditUser:
         submission_type = None
         submission_domain = None
         submission_url_path = urlparse(submission.url).path
-        
+
         if submission.domain.startswith("self."):
             submission_type = "Self"
             submission_domain = submission.subreddit
         elif (
-            submission_url_path.endswith(tuple(self.IMAGE_EXTENSIONS)) or 
+            submission_url_path.endswith(tuple(self.IMAGE_EXTENSIONS)) or
             submission.domain.endswith(tuple(self.IMAGE_DOMAINS))
         ):
             submission_type = "Image"
@@ -800,17 +732,17 @@ class RedditUser:
             self.best_submission = submission
         elif submission.score < self.worst_submission.score:
             self.worst_submission = submission
-        
-        # If submission is in a subreddit in which comments/self text 
-        # are to be ignored (such as /r/jokes, /r/writingprompts, etc), 
+
+        # If submission is in a subreddit in which comments/self text
+        # are to be ignored (such as /r/jokes, /r/writingprompts, etc),
         # do not process it further.
         if submission.subreddit in ignore_text_subs:
             return False
 
-        # Only process self texts that contain "I" or "my"  
+        # Only process self texts that contain "I" or "my"
         if not submission.is_self or not re.search(r"\b(i|my)\b",text,re.I):
             return False
-        
+
         (chunks, sentiments) = parser.extract_chunks(text)
         self.sentiments += sentiments
 
@@ -835,7 +767,7 @@ class RedditUser:
                 parser.normalize(w, t) \
                     for w,t in noun_phrase if t.startswith("N")
             ])
-            
+
             noun = next(
                 (w for w, t in noun_phrase if t.startswith("N")), None
             )
@@ -909,7 +841,7 @@ class RedditUser:
                 noun_phrase_text + " " + prep_noun_phrase_text
             ).strip()
 
-            # TODO - Handle negative actions (such as I am not...), 
+            # TODO - Handle negative actions (such as I am not...),
             # but for now:
             if any(
                 w in ["never", "no", "not", "nothing"] \
@@ -918,11 +850,11 @@ class RedditUser:
                 return
 
             # I am/was ...
-            if (len(norm_verbs) == 1 and "be" in norm_verbs and 
+            if (len(norm_verbs) == 1 and "be" in norm_verbs and
                 not prepositions and noun_phrase):
                 # Ignore gerund nouns for now
                 if (
-                    "am" in verbs and 
+                    "am" in verbs and
                     any(n.endswith("ing") for n in norm_nouns)
                 ):
                     self.attributes_extra.append(
@@ -944,12 +876,12 @@ class RedditUser:
                             (orientation, post.permalink)
                         )
                     # Include only "am" phrases
-                    elif "am" in verbs: 
+                    elif "am" in verbs:
                         attribute.append(noun)
 
                 if attribute and (
                     (
-                        # Include only attributes that end 
+                        # Include only attributes that end
                         # in predefined list of endings...
                         any(
                             a.endswith(
@@ -959,15 +891,15 @@ class RedditUser:
                             # And exclude...
                             # ...certain lone attributes
                             (
-                                len(attribute) == 1 and 
-                                attribute[0] in parser.skip_lone_attributes and 
+                                len(attribute) == 1 and
+                                attribute[0] in parser.skip_lone_attributes and
                                 not pnp_norm_nouns
                             )
                             or
                             # ...predefined skip attributes
                             any(a in attribute for a in parser.skip_attributes)
                             or
-                            # ...attributes that end in predefined 
+                            # ...attributes that end in predefined
                             # list of endings
                             any(
                                 a.endswith(
@@ -975,7 +907,7 @@ class RedditUser:
                                 ) for a in attribute
                             )
                         )
-                    ) or 
+                    ) or
                     (
                         # And include special attributes with different endings
                         any(a in attribute for a in parser.include_attributes)
@@ -996,18 +928,18 @@ class RedditUser:
                 ) and proper_nouns:
                     self.places_lived.append(
                         (
-                            " ".join(prepositions) + " " + noun_phrase_text, 
+                            " ".join(prepositions) + " " + noun_phrase_text,
                             post.permalink
                         )
                     )
                 else:
                     self.places_lived_extra.append(
                         (
-                            " ".join(prepositions) + " " + noun_phrase_text, 
+                            " ".join(prepositions) + " " + noun_phrase_text,
                             post.permalink
                         )
                     )
-            
+
             # I grew up in ...
             elif "grow" in norm_verbs and "up" in prepositions and norm_nouns:
                 if any(
@@ -1017,7 +949,7 @@ class RedditUser:
                         (
                             " ".join(
                                 [p for p in prepositions if p != "up"]
-                            ) + " " + noun_phrase_text, 
+                            ) + " " + noun_phrase_text,
                             post.permalink
                         )
                     )
@@ -1026,13 +958,13 @@ class RedditUser:
                         (
                             " ".join(
                                 [p for p in prepositions if p != "up"]
-                            ) + " " + noun_phrase_text, 
+                            ) + " " + noun_phrase_text,
                             post.permalink
                         )
                     )
 
             elif(
-                len(norm_verbs) == 1 and "prefer" in norm_verbs and 
+                len(norm_verbs) == 1 and "prefer" in norm_verbs and
                 norm_nouns and not determiners and not prepositions
             ):
                 self.favorites.append((full_noun_phrase, post.permalink))
@@ -1052,7 +984,7 @@ class RedditUser:
             subreddit = subreddits_dict[name] \
                 if name in subreddits_dict else None
             if (
-                subreddit and subreddit["attribute"] and 
+                subreddit and subreddit["attribute"] and
                 count >= self.MIN_THRESHOLD
             ):
                 self.derived_attributes[subreddit["attribute"]].append(
@@ -1063,14 +995,14 @@ class RedditUser:
             subreddit = subreddits_dict[name] \
                 if name in subreddits_dict else None
             if (
-                subreddit and subreddit["attribute"] and 
+                subreddit and subreddit["attribute"] and
                 count >= self.MIN_THRESHOLD
             ):
                 self.derived_attributes[subreddit["attribute"]].append(
                     subreddit["value"].lower()
                 )
 
-        # If someone mentions their wife, 
+        # If someone mentions their wife,
         # they should be male, and vice-versa (?)
         if "wife" in [v for v, s in self.relationship_partners]:
             self.derived_attributes["gender"].append("male")
@@ -1086,10 +1018,10 @@ class RedditUser:
             min(commented_dates) if commented_dates else min_date
         first_submission_date = \
             min(submitted_dates) if submitted_dates else min_date
-        
+
 
         self.first_post_date = max(first_comment_date, first_submission_date)
-        
+
         active_dates += [datetime.datetime.now(tz=pytz.utc)]
         commented_dates += [datetime.datetime.now(tz=pytz.utc)]
         submitted_dates += [datetime.datetime.now(tz=pytz.utc)]
@@ -1098,9 +1030,9 @@ class RedditUser:
         comment_lurk_period = max(
             [
                 {
-                    "from" : calendar.timegm(d1.utctimetuple()), 
-                    "to" : calendar.timegm(d2.utctimetuple()), 
-                    "days" : (d2 - d1).seconds, 
+                    "from" : calendar.timegm(d1.utctimetuple()),
+                    "to" : calendar.timegm(d2.utctimetuple()),
+                    "days" : (d2 - d1).seconds,
                 } for d1, d2 in zip(
                     commented_dates[:-1], commented_dates[1:]
                 )
@@ -1110,9 +1042,9 @@ class RedditUser:
         submission_lurk_period = max(
             [
                 {
-                    "from" : calendar.timegm(d1.utctimetuple()), 
-                    "to" : calendar.timegm(d2.utctimetuple()), 
-                    "days" : (d2 - d1).seconds, 
+                    "from" : calendar.timegm(d1.utctimetuple()),
+                    "to" : calendar.timegm(d2.utctimetuple()),
+                    "days" : (d2 - d1).seconds,
                 } for d1, d2 in zip(
                     submitted_dates[:-1], submitted_dates[1:]
                 )
@@ -1122,8 +1054,8 @@ class RedditUser:
         post_lurk_period = max(
             [
                 {
-                    "from" : calendar.timegm(d1.utctimetuple()), 
-                    "to" : calendar.timegm(d2.utctimetuple()), 
+                    "from" : calendar.timegm(d1.utctimetuple()),
+                    "to" : calendar.timegm(d2.utctimetuple()),
                     "days" : (d2 - d1).seconds,
                 } for d1, d2 in zip(
                     active_dates[:-1], active_dates[1:]
@@ -1134,8 +1066,8 @@ class RedditUser:
         self.lurk_period = min(
             [
                 x for x in [
-                    comment_lurk_period, 
-                    submission_lurk_period, 
+                    comment_lurk_period,
+                    submission_lurk_period,
                     post_lurk_period
                 ] if x["days"]>=0
             ],
@@ -1160,7 +1092,7 @@ class RedditUser:
     def submitted_subreddits(self):
         """
         Returns a list of subreddits redditor has submitted to.
-        
+
         """
 
         return [
@@ -1173,20 +1105,20 @@ class RedditUser:
     def results(self):
         """
         Returns accumulated data as JSON.
-        
+
         """
 
         # Redditor has no data?
         if not (self.comments or self.submissions):
             raise NoDataError
-        
+
         # Format metrics
         metrics_date = []
-        
+
         for d in self.metrics["date"]:
             metrics_date.append(
                 {
-                    "date" : "%d-%02d-01" % (d["date"][0], d["date"][1]), 
+                    "date" : "%d-%02d-01" % (d["date"][0], d["date"][1]),
                     "comments" : d["comments"],
                     "submissions" : d["submissions"],
                     "posts" : d["comments"] + d["submissions"],
@@ -1196,14 +1128,14 @@ class RedditUser:
                 }
             )
 
-        
+
         metrics_hour = []
-        
+
         for h in self.metrics["hour"]:
             metrics_hour.append(
                 {
-                    "hour" : h["hour"], 
-                    "comments" : h["comments"], 
+                    "hour" : h["hour"],
+                    "comments" : h["comments"],
                     "submissions" : h["submissions"],
                     "posts" : h["comments"] + h["submissions"],
                     "comment_karma" : h["comment_karma"],
@@ -1213,15 +1145,15 @@ class RedditUser:
             )
 
         weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-        
-        
+
+
         metrics_weekday = []
-        
+
         for w in self.metrics["weekday"]:
             metrics_weekday.append(
                 {
-                    "weekday" : weekdays[w["weekday"]], 
-                    "comments" : w["comments"], 
+                    "weekday" : weekdays[w["weekday"]],
+                    "comments" : w["comments"],
                     "submissions" : w["submissions"],
                     "posts" : w["comments"] + w["submissions"],
                     "comment_karma" : w["comment_karma"],
@@ -1229,12 +1161,12 @@ class RedditUser:
                     "karma" : w["comment_karma"] + w["submission_karma"]
                 }
             )
-        
+
         metrics_subreddit = {
-            "name" : "All", 
+            "name" : "All",
             "children" : []
         }
-        
+
         for (name, [comments, comment_karma]) in [
             (s, [sum(x) for x in zip(*[(1, r[1]) for r in group])]) \
                 for s, group in groupby(
@@ -1273,7 +1205,7 @@ class RedditUser:
             else:
                 metrics_subreddit["children"].append(
                     {
-                        "name" : topic_level1, 
+                        "name" : topic_level1,
                         "children" : [
                             {
                                 "name" : name,
@@ -1287,7 +1219,7 @@ class RedditUser:
                         ]
                     }
                 )
-        
+
         for (name, [submissions, submission_karma]) in [
             (s, [sum(x) for x in zip(*[(1,r[1]) for r in group])]) \
                 for s, group in groupby(
@@ -1336,7 +1268,7 @@ class RedditUser:
             else:
                 metrics_subreddit["children"].append(
                     {
-                        "name" : topic_level1, 
+                        "name" : topic_level1,
                         "children" : [
                             {
                                 "name" : name,
@@ -1351,23 +1283,23 @@ class RedditUser:
                     }
                 )
 
-        
+
         metrics_topic = {
-            "name" : "All", 
+            "name" : "All",
             "children" : []
         }
-        
-        # We need both topics (for Posts across topics) and 
-        # synopsis_topics (for Synopsis) because we want to include only 
-        # topics that meet the threshold limits in synopsis_topics      
+
+        # We need both topics (for Posts across topics) and
+        # synopsis_topics (for Synopsis) because we want to include only
+        # topics that meet the threshold limits in synopsis_topics
         synopsis_topics = []
 
         for name, count in Counter(
-            [s.subreddit for s in self.submissions] + 
+            [s.subreddit for s in self.submissions] +
             [c.subreddit for c in self.comments]
         ).most_common():
             if (
-                name in default_subs and 
+                name in default_subs and
                 count >= self.MIN_THRESHOLD_FOR_DEFAULT
             ) or count >= self.MIN_THRESHOLD:
                 subreddit = subreddits_dict[name] \
@@ -1385,7 +1317,7 @@ class RedditUser:
                     synopsis_topics += [topic] * count
 
         topics = []
-        
+
         for comment in self.comments:
             subreddit = subreddits_dict[comment.subreddit] \
                 if comment.subreddit in subreddits_dict else None
@@ -1402,7 +1334,7 @@ class RedditUser:
                 topics.append(topic)
             else:
                 topics.append("Other")
-        
+
         for submission in self.submissions:
             subreddit = subreddits_dict[submission.subreddit] \
                 if submission.subreddit in subreddits_dict else None
@@ -1419,7 +1351,7 @@ class RedditUser:
                 topics.append(topic)
             else:
                 topics.append("Other")
-        
+
         for topic, count in Counter(topics).most_common():
             level_topics = filter(None, topic.split(">"))
             current_node = metrics_topic
@@ -1434,21 +1366,21 @@ class RedditUser:
                             break
                     if not found_child:
                         child_node = {
-                            "name" : level_topic, 
+                            "name" : level_topic,
                             "children" : []
                         }
                         children.append(child_node)
                     current_node = child_node
                 else:
                     child_node = {
-                        "name" : level_topic, 
+                        "name" : level_topic,
                         "size" : count
                     }
-                    children.append(child_node)     
-        
+                    children.append(child_node)
+
         common_words = [
             {
-                "text" : word, 
+                "text" : word,
                 "size" : count
             } for word, count in Counter(
                 parser.common_words(self.corpus)
@@ -1458,7 +1390,7 @@ class RedditUser:
         unique_word_count = parser.unique_word_count(self.corpus)
 
         # Let's use an average of 40 WPM
-        hours_typed = round(total_word_count/(40.00*60.00), 2) 
+        hours_typed = round(total_word_count/(40.00*60.00), 2)
 
         gender = []
         for value, count in Counter(
@@ -1467,8 +1399,8 @@ class RedditUser:
             sources = [s for v, s in self.genders if v == value]
             gender.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1480,8 +1412,8 @@ class RedditUser:
             sources = [s for v, s in self.orientations if v == value]
             orientation.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1493,8 +1425,8 @@ class RedditUser:
             sources = [s for v, s in self.relationship_partners if v == value]
             relationship_partner.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1506,8 +1438,8 @@ class RedditUser:
             sources = [s for v, s in self.places_lived if v == value]
             places_lived.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1519,8 +1451,8 @@ class RedditUser:
             sources = [s for v, s in self.places_lived_extra if v == value]
             places_lived_extra.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1532,8 +1464,8 @@ class RedditUser:
             sources = [s for v, s in self.places_grew_up if v == value]
             places_grew_up.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1545,8 +1477,8 @@ class RedditUser:
             sources = [s for v, s in self.places_grew_up_extra if v == value]
             places_grew_up_extra.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1558,8 +1490,8 @@ class RedditUser:
             sources = [s for v, s in self.family_members if v == value]
             family_members.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1571,8 +1503,8 @@ class RedditUser:
             sources = [s for v, s in self.pets if v == value]
             pets.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1584,8 +1516,8 @@ class RedditUser:
             sources = [s for v, s in self.favorites if v == value]
             favorites.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1597,8 +1529,8 @@ class RedditUser:
             sources = [s for v, s in self.attributes if v == value]
             attributes.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1610,8 +1542,8 @@ class RedditUser:
             sources = [s for v, s in self.attributes_extra if v == value]
             attributes_extra.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1623,8 +1555,8 @@ class RedditUser:
             sources = [s for v, s in self.possessions if v == value]
             possessions.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1636,12 +1568,12 @@ class RedditUser:
             sources = [s for v, s in self.possessions_extra if v == value]
             possessions_extra.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
-                
+
         actions = []
         for value, count in Counter(
             [value for value, source in self.actions]
@@ -1649,8 +1581,8 @@ class RedditUser:
             sources = [s for v, s in self.actions if v == value]
             actions.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1662,8 +1594,8 @@ class RedditUser:
             sources = [s for v, s in self.actions_extra if v == value]
             actions_extra.append(
                 {
-                    "value" : value, 
-                    "count" : count, 
+                    "value" : value,
+                    "count" : count,
                     "sources" : sources
                 }
             )
@@ -1767,7 +1699,7 @@ class RedditUser:
                 synopsis["possessions"] = {
                     "data_extra" : possessions_extra
                 }
-        
+
         ''' Will work on actions later
         if actions:
             synopsis["actions"] = {
@@ -1788,8 +1720,8 @@ class RedditUser:
         '''
 
         level1_topic_groups = [
-            "business","entertainment", "gaming", "hobbies and interests", "lifestyle", 
-            "locations", "music", "science", "sports", "technology", 
+            "business","entertainment", "gaming", "hobbies and interests", "lifestyle",
+            "locations", "music", "science", "sports", "technology",
             "news and politics"
         ]
 
@@ -1805,7 +1737,7 @@ class RedditUser:
         ]
 
         topic_min_levels = {
-            "business" : 2, 
+            "business" : 2,
             "entertainment" : 3,
             "gaming" : 2,
             "hobbies and interests" : 2,
@@ -1831,25 +1763,25 @@ class RedditUser:
                 if level_topics[0] in level1_topic_groups:
                     m = topic_min_levels[level_topics[0]]
                 if (
-                    len(level_topics) >= m and 
-                    level_topics[1] in level2_topic_groups and 
+                    len(level_topics) >= m and
+                    level_topics[1] in level2_topic_groups and
                     level_topics[1] not in exclude_topics
                 ):
                     key = level_topics[1]
                 elif (
-                    len(level_topics) >= m and 
+                    len(level_topics) >= m and
                     level_topics[1] not in exclude_topics
                 ):
                     key = level_topics[0]
                 elif level_topics[0] not in level1_topic_groups:
                     key = "other"
-                coalesced_topic = Util.coalesce(level_topics).lower()   
+                coalesced_topic = Util.coalesce(level_topics).lower()
                 if key and coalesced_topic not in exclude_coalesced_topics:
                     if key in synopsis:
                         if key not in ["gender", "religion and spirituality"]:
                             synopsis[key]["data"].append(
                                 {
-                                    "value" : coalesced_topic, 
+                                    "value" : coalesced_topic,
                                     "count" : count
                                 }
                             )
@@ -1857,7 +1789,7 @@ class RedditUser:
                         synopsis[key] = {
                             "data" : [
                                 {
-                                    "value" : coalesced_topic, 
+                                    "value" : coalesced_topic,
                                     "count" : count
                                 }
                             ]
@@ -1866,8 +1798,8 @@ class RedditUser:
         for k in {k: v for k, v in self.derived_attributes.items() if len(v)}:
             dd = [
                 {
-                    "value" : v, 
-                    "count" : c, 
+                    "value" : v,
+                    "count" : c,
                     "sources" : None
                 } for v, c in Counter(self.derived_attributes[k]).most_common()
             ]
@@ -1967,7 +1899,7 @@ class RedditUser:
                     "all_time_karma" : self.link_karma,
                     "computed_karma" : computed_submission_karma,
                     "average_karma" : round(
-                        computed_submission_karma / 
+                        computed_submission_karma /
                         (len(self.submissions) or 1), 2
                     ),
                     "type_domain_breakdown" : self.submissions_by_type
