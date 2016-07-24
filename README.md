@@ -25,7 +25,7 @@ Example
 -------
 Command:
 
-    python sherlock.py orionmelt
+    python maicroft.py orionmelt
 
 Output:
 
