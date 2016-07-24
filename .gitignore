@@ -1,0 +1,17 @@
+# Standard ignores
+*.pyc
+*.pyo
+*.DS_Store
+*.swp
+*.idea
+*.project
+*.pydevproject
+*.kpf
+venv
+
+# Ignore data files
+data/
+results/
+
+# Ignore Blockspring files
+snoopsnoo/
