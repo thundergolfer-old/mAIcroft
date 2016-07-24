@@ -15,3 +15,6 @@ results/
 
 # Ignore Blockspring files
 snoopsnoo/
+
+#Ignore my virtualenv environment
+env2.7/
