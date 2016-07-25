@@ -14,6 +14,7 @@ from urlparse import urlparse
 import requests
 import pytz
 
+from exceptions import UserNotFoundError, NoDataError
 from subreddits import subreddits_dict, ignore_text_subs, default_subs
 from text_parser import TextParser
 from reddit_objects import Post, Submission, Comment
@@ -24,12 +25,6 @@ by them to reddit
 """
 
 parser = TextParser()
-
-class UserNotFoundError(Exception):
-    pass
-
-class NoDataError(Exception):
-    pass
 
 class Util:
     """
@@ -119,7 +114,7 @@ class RedditUser:
     MIN_THRESHOLD = 3
     MIN_THRESHOLD_FOR_DEFAULT = 10
     HEADERS = {
-        'User-Agent': 'Sherlock v0.1 by /u/orionmelt'
+        'User-Agent': 'MAIcroft v0.1 by /u/thundergolfer'
     }
 
     IMAGE_DOMAINS = ["imgur.com", "flickr.com"]

@@ -131,7 +131,7 @@ class TextParser:
 
         word = word.lower()
         if re.match(r"\b(dog|cat|hamster|fish|pig|snake|rat|parrot)\b", word):
-            return word
+            return word # TODO:// make the pet_animal function smarter
         else:
             return None
 
@@ -155,9 +155,7 @@ class TextParser:
     def relationship_partner(self, word):
         """
         Returns word if word is in a predefined list of relationship partners.
-
         """
-
         word = word.lower()
         if re.match(r"\b(ex-)*(boyfriend|girlfriend|so|wife|husband)\b", word):
             return word
@@ -167,9 +165,7 @@ class TextParser:
     def gender(self, word):
         """
         Returns normalized word if word is in a predefined list of genders.
-
         """
-
         word = word.lower()
         if re.match(r"\b(girl|woman|female|lady|she)\b", word):
             return "female"
@@ -247,7 +243,6 @@ class TextParser:
         """
         Given a phrase, checks and returns a possession/belonging
         (my <word>) if exists.
-
         """
 
         noun_phrase = []
@@ -275,7 +270,6 @@ class TextParser:
         """
         Given a phrase, checks and returns an action
         (I <verb-phrase>) if exists.
-
         """
 
         verb_phrase = []
@@ -302,7 +296,6 @@ class TextParser:
                     noun_phrase, prep_noun_phrase = (
                         self.process_npn_phrase(node)
                     )
-
         if noun_phrase:
             return {
                 "kind" : "action",
@@ -321,7 +314,6 @@ class TextParser:
         TODO - Should sentiments be excluded here?
 
         """
-
         chunks = []
         sentiments = []
         text = self.clean_up(text)

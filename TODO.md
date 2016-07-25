@@ -10,5 +10,12 @@
 ###### Remove Faulty Male/Female logic in derive_attributes()
 Just because someone has a husband, that does not mean that they are necessarily a woman, and vice versa. This logic will be accurate most of the time, but it is not really intelligent.
 
+###### The comment processing stops if the comment does not contain "I" or "My". Should fix this
+
+
+###### Fix the "Super awesome logic" in text_parser.py that is neither super nor awesome
+
+###### Make pet_animal(self,word) smarter. It currently ignores "puppy" or "kitten" 
+
 
 ## COMPLETED
