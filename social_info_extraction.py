@@ -1,6 +1,7 @@
 import datetime
 import urlparse
 import pytz
+import calendar
 
 from reddit_user import Util
 
@@ -9,6 +10,7 @@ from reddit_user import Util
    reusable for other major social media content eg. Twitter, Facebook, LinkedIn...
 """
 
+parser = TextParser()
 
 def process_comment(self, comment):
     """
@@ -211,7 +213,7 @@ def process_submission(self, submission):
 
 def load_attributes(self, chunk, post):
     """
-    Given an extracted chunk, load appropriate attribtues from it.
+    Given an extracted chunk, load appropriate attributes from it.
 
     """
 
@@ -458,6 +460,7 @@ def derive_attributes(self):
 
     # If someone mentions their wife,
     # they should be male, and vice-versa (?)
+    # TODO: This is faulty logic and should be changed/removed - 25/07/16
     if "wife" in [v for v, s in self.relationship_partners]:
         self.derived_attributes["gender"].append("male")
     elif "husband" in [v for v, s in self.relationship_partners]:
@@ -512,7 +515,7 @@ def derive_attributes(self):
                 "to" : calendar.timegm(d2.utctimetuple()),
                 "days" : (d2 - d1).seconds,
             } for d1, d2 in zip(
-                active_dates[:-1], active_dates[1:]
+                active_dates[:-1], active_dates[1:] # compares 1st with 2nd, 2nd with 3rd, 3rd with...
             )
         ], key=lambda x:x["days"]
     )

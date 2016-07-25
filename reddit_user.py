@@ -759,7 +759,6 @@ class RedditUser:
         Given an extracted chunk, load appropriate attribtues from it.
 
         """
-
         # Is this chunk a possession/belonging?
         if chunk["kind"] == "possession" and chunk["noun_phrase"]:
             # Extract noun from chunk
