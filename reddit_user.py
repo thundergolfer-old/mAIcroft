@@ -18,6 +18,11 @@ from subreddits import subreddits_dict, ignore_text_subs, default_subs
 from text_parser import TextParser
 from reddit_objects import Post, Submission, Comment
 
+"""Contains the RedditUser class, which builds a profile of a reddit
+user, trying the extraction meaningful information from the content submitted
+by them to reddit
+"""
+
 parser = TextParser()
 
 class UserNotFoundError(Exception):
@@ -387,16 +392,14 @@ class RedditUser:
 
             for child in response_json["data"]["children"]:
                 id = child["data"]["id"].encode("ascii", "ignore")
-                subreddit = child["data"]["subreddit"].\
-                    encode("ascii", "ignore")
+                subreddit = child["data"]["subreddit"].encode("ascii", "ignore")
                 text = child["data"]["body"].encode("ascii", "ignore")
                 created_utc = child["data"]["created_utc"]
                 score = child["data"]["score"]
                 submission_id = child["data"]["link_id"].\
                     encode("ascii", "ignore").lower()[3:]
                 edited = child["data"]["edited"]
-                top_level = True \
-                    if child["data"]["parent_id"].startswith("t3") else False
+                top_level = True if child["data"]["parent_id"].startswith("t3") else False
                 gilded = child["data"]["gilded"]
                 permalink = "http://www.reddit.com/r/%s/comments/%s/_/%s" \
                     % (subreddit, submission_id, id)
@@ -439,8 +442,7 @@ class RedditUser:
         submissions = []
         more_submissions = True
         after = None
-        base_url = r"http://www.reddit.com/user/%s/submitted/.json?limit=100" \
-            % self.username
+        base_url = r"http://www.reddit.com/user/%s/submitted/.json?limit=100" % self.username
         url = base_url
         while more_submissions:
             response = requests.get(url, headers=self.HEADERS)
@@ -981,8 +983,7 @@ class RedditUser:
         """
 
         for name, count in self.commented_subreddits():
-            subreddit = subreddits_dict[name] \
-                if name in subreddits_dict else None
+            subreddit = subreddits_dict[name] if name in subreddits_dict else None
             if (
                 subreddit and subreddit["attribute"] and
                 count >= self.MIN_THRESHOLD
@@ -992,8 +993,7 @@ class RedditUser:
                 )
 
         for name, count in self.submitted_subreddits():
-            subreddit = subreddits_dict[name] \
-                if name in subreddits_dict else None
+            subreddit = subreddits_dict[name] if name in subreddits_dict else None
             if (
                 subreddit and subreddit["attribute"] and
                 count >= self.MIN_THRESHOLD
