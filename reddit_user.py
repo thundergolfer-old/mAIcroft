@@ -14,10 +14,10 @@ from urlparse import urlparse
 import requests
 import pytz
 
-from exceptions import UserNotFoundError, NoDataError
+from maicroft_exceptions import UserNotFoundError, NoDataError
 from subreddits import subreddits_dict, ignore_text_subs, default_subs
 from text_parser import TextParser
-from reddit_objects import Post, Submission, Comment
+from social_objects import Post, Submission, Comment
 
 """Contains the RedditUser class, which builds a profile of a reddit
 user, trying the extraction meaningful information from the content submitted
@@ -362,7 +362,6 @@ class RedditUser:
             "reddit_id" : response_json["data"]["id"],
             "is_mod" : response_json["data"]["is_mod"]
         }
-
         return about
 
 
@@ -1914,3 +1913,8 @@ class RedditUser:
         }
 
         return json.dumps(results)
+
+
+if __name__ == '__main__':
+    u = RedditUser('thundergolfer')
+    print u.about
