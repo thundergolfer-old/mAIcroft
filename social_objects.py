@@ -99,7 +99,7 @@ class Tweet(Post):
             tweet_id, text, created_utc, faves, permalink
         )
         # Tweet specific feilds
-        self.retweets = retweets 
+        self.retweets = retweets
         self.coords = coords
         self.entities = entities if entities else None
         self.self_faved = self_faved
@@ -114,6 +114,7 @@ class Tweet(Post):
 class Location:
 
     def __init__(self, json_data):
-        self.country_code = json_data['country_code']
-        self.country = json_data['country']
-        self.full_name = json_data['full_name']
+        if json_data:
+            self.country_code = json_data.get('country_code', None)
+            self.country = json_data.get('country', None)
+            self.full_name = json_data.get('full_name', None)
