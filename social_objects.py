@@ -84,6 +84,26 @@ class Submission(R_Post):
         # Domain
         self.domain = domain
 
+
+class Subreddit:
+    """
+    A class to represent a Reddit 'subreddit'. Used in Reddit user
+    profile analysis.
+    """
+
+    def __init__(
+        self, name, public_desc, sub_type, num_subs, over18,
+        ignore_text, default_sub
+    ):
+        self.name = name
+        self.public_desc = public_desc.decode('utf-8')
+        self.type = sub_type
+        self.num_subscribers = num_subs
+        self.adult = over18
+        self.ignore_text = ignore_text
+        self.default_sub = default_sub
+
+        
 class Tweet(Post):
     """
     A class for Tweets derived from Post. Only contains data from the

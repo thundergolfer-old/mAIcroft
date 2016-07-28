@@ -13,10 +13,19 @@ CLIENT_ID = reddit_client_id
 CLIENT_SECRET = reddit_secret
 REDIRECT_URI = 'http://127.0.0.1:65010/authorize_callback'
 
+def get_subreddits(user):
+    """
+    Return a list of Subreddit objects, containing all subreddits
+    user is 'subbed' to
+    """
+    subreddits = r.get_my_subreddits()
+    for sub in subreddits:
+        print sub
+
 @app.route('/')
 def homepage():
     link_no_refresh = r.get_authorize_url('UniqueKey')
-    link_refresh = r.get_authorize_url('DifferentUniqueKey',
+    link_refresh = r.get_authorize_url('DifferentUniqueKey', 'identity history mysubreddits',
                                        refreshable=True)
     link_no_refresh = "<a href=%s>link</a>" % link_no_refresh
     link_refresh = "<a href=%s>link</a>" % link_refresh
@@ -34,6 +43,9 @@ def authorized():
                                                       str(info))
     text = 'You are %s and have %u link karma.' % (user.name,
                                                    user.link_karma)
+
+    text = 'Subreddits: %s.' % (get_user_subs(user))
+
     back_link = "<a href='/'>Try again</a>"
     return variables_text + '</br></br>' + text + '</br></br>' + back_link
 

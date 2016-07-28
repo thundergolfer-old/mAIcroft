@@ -16,8 +16,11 @@ results/
 # Ignore Blockspring files
 snoopsnoo/
 
-#Ignore my virtualenv environment
+# Ignore my virtualenv environment
 env2.7/
+
+# Ignore the Stanford CoreNLP Folder (+500 mb)
+stanford-corenlp-full*/
 
 # Don't store secret keys and private settings in version control
 private_settings.py
