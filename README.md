@@ -6,6 +6,9 @@ mAIcroft
 
 Extract interesting information about redditors from their submissions, comments, and subs. Outputs data in JSON format. Brother project to [Orionmelt's Sherlock](https://github.com/orionmelt/sherlock), adapting and expanding its functionality and generality.
 
+[Documentation - Read The Docs](http://maicroft.readthedocs.io/en/latest/)
+-------------------
+
 Dependencies
 ------------
 * [requests](http://docs.python-requests.org/en/master/)
