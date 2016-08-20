@@ -22,7 +22,7 @@ popular_words = defaultdict(int)
 COMMON_WORDS = set()
 
 # load a list of common words to ignore
-with open(os.path.join(PACKAGE_DIR, "words", "common-words.txt"), "r") as in_file:
+with open("common-words.txt", "r") as in_file:
     for line in in_file:
         COMMON_WORDS.add(line.strip().lower())
 

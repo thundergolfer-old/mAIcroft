@@ -17,7 +17,7 @@ reddit.refresh_access_information(refresh_token)
 # state : string of choice that represents this client
 # scope : see below for desired scope
 # refreshable : is the access_token refreshable? True, False
-url = reddit.get_authorize_url('uniqueKey', 'identity', True)
+url = reddit.get_authorize_url('uniqueKey', 'identity history mysubreddits', True)
 import webbrowser
 #webbrowser.open(url)
 
