@@ -1,3 +1,4 @@
+import sphinx_rtd_theme
 # -*- coding: utf-8 -*-
 #
 # mAIcroft documentation build configuration file, created by
