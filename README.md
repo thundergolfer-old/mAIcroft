@@ -6,8 +6,11 @@ mAIcroft
 
 Extract interesting information about redditors from their submissions, comments, and subs. Outputs data in JSON format. Brother project to [Orionmelt's Sherlock](https://github.com/orionmelt/sherlock), adapting and expanding its functionality and generality.
 
-[Documentation - Read The Docs](http://maicroft.readthedocs.io/en/latest/)
+[Documentation - Read The Docs](http://maicroft.readthedocs.io/en/latest/) [In Progress]
 -------------------
+
+### Currently working on:
+*Detecting anti-social users by measuring their number of insulting comments. User comments are classified with machine learning as neutral [0] or insulting [1].*
 
 Dependencies
 ------------
