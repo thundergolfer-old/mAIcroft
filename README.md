@@ -1,8 +1,8 @@
 <p align="center">
   <img src="images/text_logo_400.png">
 </p>
-mAIcroft
-========
+
+# mAIcroft
 
 Extract interesting information about redditors from their submissions, comments, and subs. Outputs data in JSON format. Brother project to [Orionmelt's Sherlock](https://github.com/orionmelt/sherlock), adapting and expanding its functionality and generality.
 
@@ -10,7 +10,7 @@ Extract interesting information about redditors from their submissions, comments
 -------------------
 
 ### Currently working on:
-*Detecting anti-social users by measuring their number of insulting comments. User comments are classified with machine learning as neutral [0] or insulting [1].*
+*Detecting anti-social users by measuring their number of insulting comments. User comments are classified with machine learning as neutral [0] or insulting [1].* In progress at [thundergolfer/insults](https://github.com/thundergolfer/insults) (Private Repository)
 
 Dependencies
 ------------
