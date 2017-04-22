@@ -22,7 +22,7 @@ popular_words = defaultdict(int)
 COMMON_WORDS = set()
 
 # load a list of common words to ignore
-with open("common-words.txt", "r") as in_file:
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "common-words.txt"), "r") as in_file:
     for line in in_file:
         COMMON_WORDS.add(line.strip().lower())
 
@@ -110,7 +110,7 @@ def parse_cmd_line():
     options, args = parser.parse_args()
 
     if len(args) != 2:
-        parser.error("Invalid number of arguments provided.")
+        parser.error("Invalid number of arguments provided: {}".format(args))
     user, target = args
 
     if target.startswith("/r/"):

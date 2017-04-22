@@ -7,7 +7,7 @@ import tweepy
 from tweepy import OAuthHandler
 
 from maicroft.private_settings import consumer_key, consumer_secret, access_token, access_secret
-from maicroft_exceptions import NoDataError, UserNotFoundError
+from maicroft.maicroft_exceptions import NoDataError, UserNotFoundError
 from maicroft.social_objects import Tweet, Location
 
 

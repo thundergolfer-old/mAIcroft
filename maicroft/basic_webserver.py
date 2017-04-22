@@ -5,7 +5,7 @@ from flask import Flask, request
 
 import praw
 
-from private_settings import reddit_secret, reddit_client_id
+from maicrft.private_settings import reddit_secret, reddit_client_id
 
 app = Flask(__name__)
 

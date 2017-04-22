@@ -2,6 +2,7 @@
 #
 # Run 'pip install -r requirements.txt' to install these dependencies.
 pytz
+lxml
 textblob==0.9.0
 tweepy==3.3.0
 praw

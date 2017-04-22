@@ -1,4 +1,4 @@
-from sub_data import subreddits
+from maicroft.subreddits.sub_data import subreddits
 
 subreddits_dict = dict(
 	(subreddit['name'], subreddit) for subreddit in subreddits
