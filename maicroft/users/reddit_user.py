@@ -11,7 +11,7 @@ from collections import Counter
 from itertools import groupby
 try:
     from urlparse import urlparse
-except (ImportError, ModuleNotFoundError):
+except (ImportError):
     from urllib.parse import urlparse
 
 import requests

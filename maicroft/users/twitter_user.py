@@ -7,15 +7,12 @@ except ImportError: import json
 import tweepy
 from tweepy import OAuthHandler
 
-from maicroft.private_settings import consumer_key, consumer_secret, access_token, access_secret
 from maicroft.maicroft_exceptions import NoDataError, UserNotFoundError
 from maicroft.social_objects import Tweet, Location
-
-
-auth = OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_secret)
-
-tweetAPI = tweepy.API(auth)
+try:
+    from maicroft.private_settings import consumer_key, consumer_secret, access_token, access_secret
+except ImportError:
+    pass
 
 # List of all our tweets
 # for tweet in tweepy.Cursor(tweetApi.user_timeline).items():
@@ -180,6 +177,12 @@ class TwitterUser:
         # Goals
 
 if __name__ == '__main__':
+
+    auth = OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_secret)
+
+    tweetAPI = tweepy.API(auth)
+    
     path = ""
     name = "twitter_user"
     sys.stdout = open(path + name + ".out", "w")

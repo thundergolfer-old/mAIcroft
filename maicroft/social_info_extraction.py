@@ -1,7 +1,7 @@
 import datetime
 try:
     import urlparse
-except (ImportError, ModuleNotFoundError):
+except (ImportError):
     import urllib.parse as urlparse
 import pytz
 import calendar
