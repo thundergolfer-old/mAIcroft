@@ -1,6 +1,6 @@
 # example_webserver.py #
 ########################
-
+from __future__ import print_function
 from flask import Flask, request
 
 import praw
@@ -20,7 +20,7 @@ def get_subreddits(user):
     """
     subreddits = r.get_my_subreddits()
     for sub in subreddits:
-        print sub
+        print(sub)
 
 @app.route('/')
 def homepage():

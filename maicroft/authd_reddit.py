@@ -1,5 +1,5 @@
+from __future__ import print_function
 import praw
-
 from maicroft.private_settings import reddit_secret, reddit_client_id, reddit_redirect_uri
 
 
@@ -22,13 +22,13 @@ import webbrowser
 #webbrowser.open(url)
 
 access_information = reddit.get_access_information(oauth_secret)
-print access_information
+print(access_information)
 
 # Swap from one authenticated user to another with :
 # r.set_access_credentials(**access_information)
 
 authd_user = reddit.get_me()
-print authd_user.name, authd_user.link_karma
+print(authd_user.name, authd_user.link_karma)
 
 # Auth token lasts for 60 min
 # To refresh, there is this command :
