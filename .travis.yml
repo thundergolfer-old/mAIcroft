@@ -7,4 +7,5 @@ branches:
   only: [master]
 # command to run tests
 script:
+  - python -m textblob.download_corpora
   - nosetests

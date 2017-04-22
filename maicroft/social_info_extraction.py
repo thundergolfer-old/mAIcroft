@@ -1,5 +1,8 @@
 import datetime
-import urlparse
+try:
+    import urlparse
+except (ImportError, ModuleNotFoundError):
+    import urllib.parse as urlparse
 import pytz
 import calendar
 

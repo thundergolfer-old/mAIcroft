@@ -21,3 +21,18 @@ class TestTextParser(unittest.TestCase):
             'mom', 'mother', 'dad', 'brother', 'sister'
         ]
         assert all(self.TP.family_member(w) for w in family_test_list)
+
+    def test_common_words(self):
+        test_text = """
+        This is some text that contains stop words and interesting words
+        aplenty. Fire and brimstone without magic or technology. The woods were darkened.
+        """
+        expected = [
+            'This', 'text', 'stop', 'words', 'interesting',
+            'words', 'aplenty', 'Fire', 'brimstone', 'magic',
+            'technology', 'The', 'woods', 'darkened'
+        ]
+        assert expected == self.TP.common_words(test_text)
+
+if __name__ == '__main__':
+    unittest.main()

@@ -1,6 +1,6 @@
 try:
     from urlparse import urlparse
-except ModuleNotFoundError:
+except (ImportError, ModuleNotFoundError):
     from urllib.parse import urlparse
 
 import requests
