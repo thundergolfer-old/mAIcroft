@@ -25,13 +25,13 @@ Setup
 
 Usage
 -----
-    python maicroft.py <reddit-username>
+    python -m maicroft.core <social-platform> <platform-username>
 
 Example
 -------
 Command:
 
-    python maicroft.py thundergolfer
+    python -m maicroft.core reddit thundergolfer
 
 Output:
 
