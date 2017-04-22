@@ -11,7 +11,7 @@ from maicroft.users.reddit_user import RedditUser
 from maicroft.users.twitter_user import TwitterUser
 from maicroft.maicroft_exceptions import NoDataError, UserNotFoundError
 
-def runMenu():
+def run_menu():
     ans = 0
     while ans != "2":
         print("""
@@ -20,21 +20,21 @@ def runMenu():
             3. Exit
         """)
         ans = raw_input("Enter Choice: ")
-        processMenuChoice(int(ans))
+        process_menu_choice(int(ans))
 
-def processMenuChoice( choice ):
+def process_menu_choice( choice ):
     if choice == 1:
         username = raw_input("Enter a reddit username: ")
-        processSocialUser(username)
+        process_social_user(username)
     elif choice == 2:
         username = raw_input("Enter a twitter id/screen-name")
-        process
+        process_social_user(username, platform="twitter")
     elif choice == 3:
         sys.exit()
     else:
         print("invalid input. please try again")
 
-def processSocialUser( username, platform="Reddit", prettyprint=False ):
+def process_social_user( username, platform="Reddit", prettyprint=False ):
     u = None
     print("Processing " + platform + " user: %s" % username)
     start = datetime.datetime.now()
@@ -61,10 +61,10 @@ def main():
     elif len(sys.argv) == 4 and sys.argv[3] == 'prettyprint':
         prettyPrint = True
     elif len(sys.argv) == 1:
-        runMenu()
+        run_menu()
     else:
         sys.exit("Incorrect number of arguments\nUsage: python <program> <SOCIAL PLATFORM> <USERNAME>")
-    processSocialUser( username, platform=plat, prettyprint=prettyPrint)
+    process_social_user( username, platform=plat, prettyprint=prettyPrint)
 
 if __name__ == '__main__':
     main()

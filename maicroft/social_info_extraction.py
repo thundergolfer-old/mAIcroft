@@ -134,8 +134,7 @@ def load_attributes(user, chunk, post):
         noun_phrase = chunk["noun_phrase"]
         noun_phrase_text = " ".join([w for w, t in noun_phrase])
         norm_nouns = " ".join([
-            parser.normalize(w, t) \
-                for w,t in noun_phrase if t.startswith("N")
+            parser.normalize(w, t) for w,t in noun_phrase if t.startswith("N")
         ])
 
         noun = next(
