@@ -2,7 +2,7 @@
   <img src="images/text_logo_400.png">
 </p>
 
-# mAIcroft [![Build Status](https://travis-ci.org/thundergolfer/mAIcroft.svg?branch=master)](https://travis-ci.org/thundergolfer/mAIcroft)
+# mAIcroft [![Build Status](https://travis-ci.org/thundergolfer/mAIcroft.svg?branch=master)](https://travis-ci.org/thundergolfer/mAIcroft) [![Code Climate](https://codeclimate.com/github/thundergolfer/mAIcroft/badges/gpa.svg)](https://codeclimate.com/github/thundergolfer/mAIcroft) [![Test Coverage](https://codeclimate.com/github/thundergolfer/mAIcroft/badges/coverage.svg)](https://codeclimate.com/github/thundergolfer/mAIcroft/coverage)
 
 Extract interesting information about redditors from their submissions, comments, and subs. Outputs data in JSON format. Brother project to [Orionmelt's Sherlock](https://github.com/orionmelt/sherlock), adapting and expanding its functionality and generality.
 
