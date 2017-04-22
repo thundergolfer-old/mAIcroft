@@ -8,6 +8,8 @@
 *.pydevproject
 *.kpf
 venv
+build/
+dist/
 
 # Ignore data files
 data/
@@ -18,6 +20,10 @@ snoopsnoo/
 
 # Ignore my virtualenv environment
 env2.7/
+virtual_env/
+
+# Ignore egg-info
+*egg-info/
 
 # Ignore the Stanford CoreNLP Folder (+500 mb)
 stanford-corenlp-full*/
