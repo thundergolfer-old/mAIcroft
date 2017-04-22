@@ -7,8 +7,8 @@ from textblob import TextBlob, Word
 from textblob.taggers import PatternTagger
 from textblob.sentiments import NaiveBayesAnalyzer
 
-from maicroft.words.utilityTextSets import stopwords
-import maicroft.words.utilityTextSets
+from maicroft.words.utility_text_sets import stopwords
+from maicroft.words import utility_text_sets
 
 pattern_tagger = PatternTagger()
 naive_bayes_analyzer = NaiveBayesAnalyzer()
@@ -23,7 +23,7 @@ class TextParser:
     Utility class for processing text content.
     """
 
-    substitutions = utilityTextSets.substitutions
+    substitutions = utility_text_sets.substitutions
 
     # Skip if any of these is the *only* attribute - for instance,
     # "I'm a big fan of Queen" makes sense, but "I'm a fan" doesn't.
@@ -32,7 +32,7 @@ class TextParser:
     ]
 
     # A select set of attributes we want to exclude.
-    skip_attributes = utilityTextSets.skip_attributes
+    skip_attributes = utility_text_sets.skip_attributes
 
     # A select set of attributes we want to include.
     include_attributes = [
@@ -419,4 +419,4 @@ class TextParser:
         For testing purposes only.
         """
 
-        print TextBlob(sentence).tags
+        print(TextBlob(sentence).tags)

@@ -2,7 +2,7 @@
 
 # Handles user interaction with sherlock program. User passes their reddit username
 # and program attempts to find a reddit matching it.
-
+from __future__ import print_function
 import sys
 import datetime
 import getopt
@@ -14,7 +14,7 @@ from maicroft.maicroft_exceptions import NoDataError, UserNotFoundError
 def runMenu():
     ans = 0
     while ans != "2":
-        print ("""
+        print("""
             1. Process a Reddit user
             2. Process a Twitter user
             3. Exit
@@ -32,24 +32,25 @@ def processMenuChoice( choice ):
     elif choice == 3:
         sys.exit()
     else:
-        print "invalid input. please try again"
+        print("invalid input. please try again")
 
 def processSocialUser( username, platform="Reddit", prettyprint=False ):
     u = None
-    print "Processing " + platform + " user %s" % username
+    print("Processing " + platform + " user: %s" % username)
     start = datetime.datetime.now()
     try:
         if platform.lower() == "reddit": u = RedditUser(username)
-        elif platform.lower() == "twitter": u =TwitterUser(username)
-        else: print "Invalid platform specified."
-        if prettyprint: print json.dumps(u, indent=4)
-        else:           print u
-    except UserNotFoundError:
-        print "User %s not found" % sys.argv[1]
-    except NoDataError:
-        print "No data available for user %s" % sys.argv[1]
+        elif platform.lower() == "twitter": u = TwitterUser(username)
+        else: print("Invalid platform specified.")
 
-    print "Processing complete... %s" % (datetime.datetime.now() - start)
+        if prettyprint: print(json.dumps(u, indent=4))
+        else:           print(u)
+    except UserNotFoundError:
+        print("User %s not found" % sys.argv[1])
+    except NoDataError:
+        print("No data available for user %s" % sys.argv[1])
+
+    print("Processing complete... %s" % (datetime.datetime.now() - start))
     return u
 
 def main():
@@ -62,7 +63,7 @@ def main():
     elif len(sys.argv) == 1:
         runMenu()
     else:
-        sys.exit("Incorrect number of arguments")
+        sys.exit("Incorrect number of arguments\nUsage: python <program> <SOCIAL PLATFORM> <USERNAME>")
     processSocialUser( username, platform=plat, prettyprint=prettyPrint)
 
 if __name__ == '__main__':

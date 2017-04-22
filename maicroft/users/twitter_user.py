@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 import string
 import json
@@ -183,4 +184,4 @@ if __name__ == '__main__':
     name = "twitter_user"
     sys.stdout = open(path + name + ".out", "w")
     u = TwitterUser('jonobelotti_IO') # user_id
-    print u.about
+    print(u.about)
