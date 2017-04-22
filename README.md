@@ -2,7 +2,7 @@
   <img src="images/text_logo_400.png">
 </p>
 
-# mAIcroft
+# mAIcroft [![Build Status](https://travis-ci.org/thundergolfer/mAIcroft.svg?branch=master)](https://travis-ci.org/thundergolfer/mAIcroft)
 
 Extract interesting information about redditors from their submissions, comments, and subs. Outputs data in JSON format. Brother project to [Orionmelt's Sherlock](https://github.com/orionmelt/sherlock), adapting and expanding its functionality and generality.
 
