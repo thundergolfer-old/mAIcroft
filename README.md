@@ -10,7 +10,7 @@ Extract interesting information about redditors from their submissions, comments
 -------------------
 
 ### Currently working on:
-*Detecting anti-social users by measuring their number of insulting comments. User comments are classified with machine learning as neutral [0] or insulting [1].* In progress at [thundergolfer/insults](https://github.com/thundergolfer/insults) (Private Repository)
+*Detecting anti-social users by measuring their number of insulting comments. User comments are classified with machine learning as neutral [0] or insulting [1].* In progress at [thundergolfer/insults](https://github.com/thundergolfer/insults)
 
 Dependencies
 ------------
