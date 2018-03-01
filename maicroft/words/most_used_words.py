@@ -320,7 +320,8 @@ def main():
                           count_word_freqs=options.count_word_freqs,
                           max_threshold=options.max_threshold)
     else:
-        process_redditor(redditor=reddit.get_redditor(target), limit=options.limit,
+        process_redditor(redditor=reddit.get_redditor(target),
+                         limit=options.limit,
                          count_word_freqs=options.count_word_freqs,
                          max_threshold=options.max_threshold)
 

@@ -17,11 +17,14 @@ reusable for other major social media content eg. Twitter, Facebook, LinkedIn...
 
 parser = TextParser()
 
+
 def antisocial_rating( user ):
     raise NotImplementedError
 
+
 def insult_or_not( user, comment ):
     raise NotImplementedError
+
 
 def process_comment(user, comment):
     """
@@ -31,15 +34,15 @@ def process_comment(user, comment):
     * Sanitizes and extracts chunks from comment.
     """
 
-    text = Util.sanitize_text(comment.text) # Sanitize comment text.
+    text = Util.sanitize_text(comment.text)  # Sanitize comment text.
 
-    user.corpus += text.lower() # Add comment text to corpus.
+    user.corpus += text.lower()  # Add comment text to corpus.
 
     comment_timestamp = datetime.datetime.fromtimestamp(
         comment.created_utc, tz=pytz.utc
     )
 
-    process_metrics(user, comment): # Process the comment for metrics
+    process_metrics(user, comment):  # Process the comment for metrics
 
     # If comment is in a subreddit in which comments/user text
     # are to be ignored (such as /r/jokes, /r/writingprompts, etc), do not process it further.
@@ -60,6 +63,7 @@ def process_comment(user, comment):
 
     return True
 
+
 def process_submission(user, submission):
     """
     Process a single submission.
@@ -72,7 +76,7 @@ def process_submission(user, submission):
         text = Util.sanitize_text(submission.text)
         user.corpus += text.lower()
 
-    process_submission_metrics(user, submission) # add metrics info to user
+    process_submission_metrics(user, submission)  # add metrics info to user
 
     submission_type = None
     submission_domain = None
@@ -94,17 +98,17 @@ def process_submission(user, submission):
         submission_type = "Other"
         submission_domain = submission.domain
     t = [
-        x for x in user.submissions_by_type["children"] if x["name"]==submission_type
+        x for x in user.submissions_by_type["children"] if x["name"] == submission_type
     ][0]
     d = (
-        [x for x in t["children"] if x["name"]==submission_domain] or [None]
+        [x for x in t["children"] if x["name"] == submission_domain] or [None]
     )[0]
     if d:
         d["size"] += 1
     else:
         t["children"].append({
-            "name" : submission_domain,
-            "size" : 1
+            "name": submission_domain,
+            "size": 1
         })
 
     # If submission is in a subreddit in which comments/user text
@@ -114,7 +118,7 @@ def process_submission(user, submission):
         return False
 
     # Only process user texts that contain "I" or "my"
-    if not submission.is_user or not re.search(r"\b(i|my)\b",text,re.I):
+    if not submission.is_user or not re.search(r"\b(i|my)\b", text, re.I):
         return False
 
     (chunks, sentiments) = parser.extract_chunks(text)
@@ -124,6 +128,7 @@ def process_submission(user, submission):
         user.load_attributes(chunk, submission)
 
     return True
+
 
 def load_attributes(user, chunk, post):
     """
@@ -137,7 +142,7 @@ def load_attributes(user, chunk, post):
         noun_phrase = chunk["noun_phrase"]
         noun_phrase_text = " ".join([w for w, t in noun_phrase])
         norm_nouns = " ".join([
-            parser.normalize(w, t) for w,t in noun_phrase if t.startswith("N")
+            parser.normalize(w, t) for w, t in noun_phrase if t.startswith("N")
         ])
 
         noun = next(
@@ -167,14 +172,14 @@ def load_attributes(user, chunk, post):
 
         # Extract verbs, adverbs, etc from chunk
         norm_adverbs = [
-            parser.normalize(w,t) \
-                for w, t in verb_phrase if t.startswith("RB")
+            parser.normalize(w, t)
+            for w, t in verb_phrase if t.startswith("RB")
         ]
         adverbs = [w.lower() for w, t in verb_phrase if t.startswith("RB")]
 
         norm_verbs = [
-            parser.normalize(w,t) \
-                for w, t in verb_phrase if t.startswith("V")
+            parser.normalize(w, t)
+            for w, t in verb_phrase if t.startswith("V")
         ]
         verbs = [w.lower() for w, t in verb_phrase if t.startswith("V")]
 
@@ -186,13 +191,13 @@ def load_attributes(user, chunk, post):
             [w for w, t in noun_phrase if t not in ["DT"]]
         )
         norm_nouns = [
-            parser.normalize(w,t) \
-                for w, t in noun_phrase if t.startswith("N")
+            parser.normalize(w, t)
+            for w, t in noun_phrase if t.startswith("N")
         ]
         proper_nouns = [w for w, t in noun_phrase if t == "NNP"]
         determiners = [
-            parser.normalize(w, t) \
-                for w, t in noun_phrase if t.startswith("DT")
+            parser.normalize(w, t)
+            for w, t in noun_phrase if t.startswith("DT")
         ]
 
         prep_noun_phrase = chunk["prep_noun_phrase"]
@@ -201,12 +206,12 @@ def load_attributes(user, chunk, post):
             w.lower() for w, t in prep_noun_phrase if t in ["TO", "IN"]
         ]
         pnp_norm_nouns = [
-            parser.normalize(w, t) \
-                for w, t in prep_noun_phrase if t.startswith("N")
+            parser.normalize(w, t)
+            for w, t in prep_noun_phrase if t.startswith("N")
         ]
         pnp_determiners = [
-            parser.normalize(w, t) \
-                for w, t in prep_noun_phrase if t.startswith("DT")
+            parser.normalize(w, t)
+            for w, t in prep_noun_phrase if t.startswith("DT")
         ]
 
         full_noun_phrase = (
@@ -216,14 +221,13 @@ def load_attributes(user, chunk, post):
         # TODO - Handle negative actions (such as I am not...),
         # but for now:
         if any(
-            w in ["never", "no", "not", "nothing"] \
-                for w in norm_adverbs+determiners
+            w in ["never", "no", "not", "nothing"]
+            for w in norm_adverbs+determiners
         ):
             return
 
         # I am/was ...
-        if (len(norm_verbs) == 1 and "be" in norm_verbs and
-            not prepositions and noun_phrase):
+        if (len(norm_verbs) == 1 and "be" in norm_verbs and not prepositions and noun_phrase):
             # Ignore gerund nouns for now
             if (
                 "am" in verbs and
@@ -345,6 +349,7 @@ def load_attributes(user, chunk, post):
             actions_extra = " ".join(norm_verbs)
             user.actions_extra.append((actions_extra, post.permalink))
 
+
 def derive_attributes(user):
     """
     Derives attributes using activity data.
@@ -388,7 +393,6 @@ def derive_attributes(user):
     first_submission_date = \
         min(submitted_dates) if submitted_dates else min_date
 
-
     user.first_post_date = max(first_comment_date, first_submission_date)
 
     active_dates += [datetime.datetime.now(tz=pytz.utc)]
@@ -399,37 +403,37 @@ def derive_attributes(user):
     comment_lurk_period = max(
         [
             {
-                "from" : calendar.timegm(d1.utctimetuple()),
-                "to" : calendar.timegm(d2.utctimetuple()),
-                "days" : (d2 - d1).seconds,
+                "from": calendar.timegm(d1.utctimetuple()),
+                "to": calendar.timegm(d2.utctimetuple()),
+                "days": (d2 - d1).seconds,
             } for d1, d2 in zip(
                 commented_dates[:-1], commented_dates[1:]
             )
-        ], key=lambda x:x["days"]
-    ) if len(commented_dates) > 1 else {"days":-1}
+        ], key=lambda x: x["days"]
+    ) if len(commented_dates) > 1 else {"days": -1}
 
     submission_lurk_period = max(
         [
             {
-                "from" : calendar.timegm(d1.utctimetuple()),
-                "to" : calendar.timegm(d2.utctimetuple()),
-                "days" : (d2 - d1).seconds,
+                "from": calendar.timegm(d1.utctimetuple()),
+                "to": calendar.timegm(d2.utctimetuple()),
+                "days": (d2 - d1).seconds,
             } for d1, d2 in zip(
                 submitted_dates[:-1], submitted_dates[1:]
             )
-        ], key=lambda x:x["days"]
-    ) if len(submitted_dates) > 1 else {"days":-1}
+        ], key=lambda x: x["days"]
+    ) if len(submitted_dates) > 1 else {"days": -1}
 
     post_lurk_period = max(
         [
             {
-                "from" : calendar.timegm(d1.utctimetuple()),
-                "to" : calendar.timegm(d2.utctimetuple()),
-                "days" : (d2 - d1).seconds,
+                "from": calendar.timegm(d1.utctimetuple()),
+                "to": calendar.timegm(d2.utctimetuple()),
+                "days": (d2 - d1).seconds,
             } for d1, d2 in zip(
-                active_dates[:-1], active_dates[1:] # compares 1st with 2nd, 2nd with 3rd, 3rd with...
+                active_dates[:-1], active_dates[1:]  # compares 1st with 2nd, 2nd with 3rd, 3rd with...
             )
-        ], key=lambda x:x["days"]
+        ], key=lambda x: x["days"]
     )
 
     user.lurk_period = min(
@@ -438,8 +442,8 @@ def derive_attributes(user):
                 comment_lurk_period,
                 submission_lurk_period,
                 post_lurk_period
-            ] if x["days"]>=0
+            ] if x["days"] >= 0
         ],
-        key=lambda x:x["days"]
+        key=lambda x: x["days"]
     )
     del user.lurk_period["days"]

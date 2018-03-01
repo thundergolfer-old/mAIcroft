@@ -1,5 +1,3 @@
-
-
 """
 Activity Metrics Processing File
 --------------------------------
@@ -13,6 +11,10 @@ are vaguely related.
 
 They are kept separately from the 'core' of the project here in this file.
 """
+
+import datetime
+import pytz
+
 
 def process_metrics(user, comment):
     """
@@ -65,6 +67,7 @@ def process_metrics(user, comment):
     elif comment.score < user.worst_comment.score:
         user.worst_comment = comment
 
+
 def process_submission_metrics(user, submission):
     """
     Process the part of a submission that relates to metrics
@@ -81,9 +84,9 @@ def process_submission_metrics(user, submission):
         user.worst_submission = submission
 
     days_ago_60 = user.today - datetime.timedelta(60)
-    if (submission_timestamp.date() - days_ago_60).days>0:
+    if (submission_timestamp.date() - days_ago_60).days > 0:
         user.metrics["heatmap"][
-            ((submission_timestamp.date() - days_ago_60).days-1)*24 + submission_timestamp.hour
+            ((submission_timestamp.date() - days_ago_60).days-1) * 24 + submission_timestamp.hour
         ] += 1
         user.metrics["recent_karma"][
             (submission_timestamp.date() - days_ago_60).days

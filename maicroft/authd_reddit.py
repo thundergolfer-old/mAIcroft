@@ -1,15 +1,15 @@
 from __future__ import print_function
 import praw
-from maicroft.private_settings import reddit_secret, reddit_client_id, reddit_redirect_uri
-
+from maicroft.private_settings import reddit_secret, reddit_client_id
+from maicroft.private_settings import reddit_redirect_uri
 
 user_agent = "mAIcroft 0.1 by /u/thundergolfer"
 
 reddit = praw.Reddit(user_agent=user_agent)
 
 reddit.set_oauth_app_info(client_id=reddit_client_id,
-                     client_secret=reddit_secret,
-                     redirect_uri=reddit_redirect_uri)
+                          client_secret=reddit_secret,
+                          redirect_uri=reddit_redirect_uri)
 refresh_token = "32129462-5lCQ6tLb50uPvaMVgLhmugPqq4w'"
 reddit.refresh_access_information(refresh_token)
 
@@ -18,8 +18,7 @@ reddit.refresh_access_information(refresh_token)
 # scope : see below for desired scope
 # refreshable : is the access_token refreshable? True, False
 url = reddit.get_authorize_url('uniqueKey', 'identity history mysubreddits', True)
-import webbrowser
-#webbrowser.open(url)
+# webbrowser.open(url)
 
 access_information = reddit.get_access_information(oauth_secret)
 print(access_information)

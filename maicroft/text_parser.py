@@ -18,6 +18,7 @@ VERB = "v"
 ADV = "r"
 ADJ = "a"
 
+
 class TextParser:
     """
     Utility class for processing text content.
@@ -40,7 +41,7 @@ class TextParser:
         "marine", "chef", "sophomore", "catholic", "mod",
         # TODO - These make sense only when accompanied by
         # at least another noun
-        #"person","enthusiast","fanboy","player","advocate",
+        # "person","enthusiast","fanboy","player","advocate",
     ]
 
     # Super awesome logic - if noun ends in any of these, it's *probably*
@@ -49,7 +50,7 @@ class TextParser:
     include_attribute_endings = (
         "er", "or", "ar", "ist", "an", "ert", "ese", "te", "ot"
     )
-    exclude_attribute_endings = ("ing","fucker")
+    exclude_attribute_endings = ("ing", "fucker")
 
     # "Filler" words (in sentences such as "I think...", "I guess...", etc.)
     skip_verbs = ["were", "think", "guess", "mean"]
@@ -132,7 +133,7 @@ class TextParser:
 
         word = word.lower()
         if re.match(r"\b(dog|cat|hamster|fish|pig|snake|rat|parrot)\b", word):
-            return word # TODO:// make the pet_animal function smarter
+            return word  # TODO:// make the pet_animal function smarter
         else:
             return None
 
@@ -250,19 +251,19 @@ class TextParser:
 
         for i in range(len(phrase)):
             node = phrase[i]
-            if type(node) is tuple: # word can only be pronoun
+            if type(node) is tuple:  # word can only be pronoun
                 w, t = node
                 if t == "PRP$" and w.lower() != "my":
                     return None
-            else: # type has to be nltk.tree.Tree
+            else:  # type has to be nltk.tree.Tree
                 if node.label() == "_N":
                     noun_phrase = self.process_noun_phrase(node)
-                else: # what could this be?
+                else:  # what could this be?
                     pass
         if noun_phrase:
             return {
-                "kind" : "possession",
-                "noun_phrase" : noun_phrase
+                "kind": "possession",
+                "noun_phrase": noun_phrase
             }
         else:
             return None
@@ -280,13 +281,13 @@ class TextParser:
 
         for i in range(len(phrase)):
             node = phrase[i]
-            if type(node) is tuple: # word is either pronoun or preposition
+            if type(node) is tuple:  # word is either pronoun or preposition
                 w, t = node
                 if t == "PRP" and w.lower() != "i":
                     return None
                 elif t == "IN":
                     prepositions.append((w.lower(), t))
-                else: # what could this be?!
+                else:  # what could this be?!
                     pass
             else:
                 if node.label() == "_VP":
@@ -299,11 +300,11 @@ class TextParser:
                     )
         if noun_phrase:
             return {
-                "kind" : "action",
-                "verb_phrase" : verb_phrase,
-                "prepositions" : prepositions,
-                "noun_phrase" : noun_phrase,
-                "prep_noun_phrase" : prep_noun_phrase
+                "kind": "action",
+                "verb_phrase": verb_phrase,
+                "prepositions": prepositions,
+                "noun_phrase": noun_phrase,
+                "prep_noun_phrase": prep_noun_phrase
             }
         else:
             return None
@@ -318,13 +319,15 @@ class TextParser:
         chunks = []
         sentiments = []
         text = self.clean_up(text)
-        blob = TextBlob(text, pos_tagger=pattern_tagger, analyzer=naive_bayes_analyzer)
+        blob = TextBlob(
+            text,
+            pos_tagger=pattern_tagger,
+            analyzer=naive_bayes_analyzer
+        )
 
         for sentence in blob.sentences:
-
-            if (not sentence.tags or
-                not re.search(r"\b(i|my)\b", str(sentence),re.I)
-            ):
+            has_i_or_why = re.search(r"\b(i|my)\b", str(sentence), re.I)
+            if (not sentence.tags or not has_i_or_why):
                 continue
 
             tree = self.chunker.parse(sentence.tags)

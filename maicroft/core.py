@@ -3,13 +3,14 @@
 # Handles user interaction with sherlock program. User passes their reddit username
 # and program attempts to find a reddit matching it.
 from __future__ import print_function
+import json
 import sys
 import datetime
-import getopt
 
 from maicroft.users.reddit_user import RedditUser
 from maicroft.users.twitter_user import TwitterUser
 from maicroft.maicroft_exceptions import NoDataError, UserNotFoundError
+
 
 def run_menu():
     ans = 0
@@ -22,7 +23,8 @@ def run_menu():
         ans = raw_input("Enter Choice: ")
         process_menu_choice(int(ans))
 
-def process_menu_choice( choice ):
+
+def process_menu_choice(choice):
     if choice == 1:
         username = raw_input("Enter a reddit username: ")
         process_social_user(username)
@@ -34,17 +36,23 @@ def process_menu_choice( choice ):
     else:
         print("invalid input. please try again")
 
-def process_social_user( username, platform="Reddit", prettyprint=False ):
+
+def process_social_user(username, platform="Reddit", prettyprint=False):
     u = None
     print("Processing " + platform + " user: %s" % username)
     start = datetime.datetime.now()
     try:
-        if platform.lower() == "reddit": u = RedditUser(username)
-        elif platform.lower() == "twitter": u = TwitterUser(username)
-        else: print("Invalid platform specified.")
+        if platform.lower() == "reddit":
+            u = RedditUser(username)
+        elif platform.lower() == "twitter":
+            u = TwitterUser(username)
+        else:
+            print("Invalid platform specified.")
 
-        if prettyprint: print(json.dumps(u, indent=4))
-        else:           print(u)
+        if prettyprint:
+            print(json.dumps(u, indent=4))
+        else:
+            print(u)
     except UserNotFoundError:
         print("User %s not found" % sys.argv[1])
     except NoDataError:
@@ -52,6 +60,7 @@ def process_social_user( username, platform="Reddit", prettyprint=False ):
 
     print("Processing complete... %s" % (datetime.datetime.now() - start))
     return u
+
 
 def main():
     prettyPrint = False
@@ -64,7 +73,8 @@ def main():
         run_menu()
     else:
         sys.exit("Incorrect number of arguments\nUsage: python <program> <SOCIAL PLATFORM> <USERNAME>")
-    process_social_user( username, platform=plat, prettyprint=prettyPrint)
+    process_social_user(username, platform=plat, prettyprint=prettyPrint)
+
 
 if __name__ == '__main__':
     main()
