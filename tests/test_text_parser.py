@@ -1,6 +1,7 @@
 import unittest
 from maicroft.text_parser import TextParser
 
+
 class TestTextParser(unittest.TestCase):
 
     def setUp(self):
@@ -33,6 +34,7 @@ class TestTextParser(unittest.TestCase):
             'technology', 'The', 'woods', 'darkened'
         ]
         assert expected == self.TP.common_words(test_text)
+
 
 if __name__ == '__main__':
     unittest.main()
