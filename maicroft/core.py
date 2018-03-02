@@ -6,12 +6,43 @@ from __future__ import print_function
 import argparse
 from builtins import input
 import json
+import logging
 import sys
 import datetime
 
 from maicroft.users.reddit_user import RedditUser
 from maicroft.users.twitter_user import TwitterUser
 from maicroft.maicroft_exceptions import NoDataError, UserNotFoundError
+
+
+def setup_logging(debug=False, logging_level=None):
+    # create logger
+    logger = logging.getLogger('maicroft')
+
+    if not debug and not logging_level:
+        logger.addHandler(logging.NullHandler())
+        return logger
+
+    if debug or logging_level == "DEBUG":
+        logger.setLevel(logging.DEBUG)
+    elif logging_level == "WARN":
+        logger.setLevel(logging.WARN)
+    elif logging_level == "INFO":
+        logger.setLevel(logging.INFO)
+    elif logging_level == "ERROR":
+        logger.setLevel(logging.ERROR)
+
+    # create console handler and set level to debug
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+
+    # create formatter
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # add formatter to ch
+    ch.setFormatter(formatter)
+    # add ch to logger
+    logger.addHandler(ch)
+    return logger
 
 
 def run_menu():
@@ -75,6 +106,12 @@ def main():
                         help='output debugging logs from program')
     parser.add_argument('--prettyprint', dest='prettyprint', action='store_true',
                         help='output json is prettyprint (default: False)')
+    parser.add_argument('--logging-level',
+                        dest='logging_level',
+                        type=str,
+                        choices=set(["DEBUG", "INFO", "WARN", "ERROR"]),
+                        default=None,
+                        help='set the logging level for the program. one of {DEBUG, INFO, WARN, ERROR}')
 
     parser.set_defaults(prettyprint=False, debug=False)
     if len(sys.argv) == 1:
@@ -87,6 +124,8 @@ def main():
     else:
         plat = args.platform
         username = args.username
+
+    logger = setup_logging(args.debug, args.logging_level)
 
     process_social_user(username, platform=plat, prettyprint=args.prettyprint)
 

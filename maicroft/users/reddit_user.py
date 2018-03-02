@@ -1,33 +1,37 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-import csv
-import datetime
-import re
-import json
-import time
-import sys
+
 import calendar
+import datetime
+import json
+import logging
+import re
+import time
 from collections import Counter
 from itertools import groupby
+
+import pytz
+import requests
+
+from maicroft.maicroft_exceptions import NoDataError, UserNotFoundError
+from maicroft.social_objects import Comment, Submission
+from maicroft.subreddits import default_subs, ignore_text_subs, subreddits_dict
+from maicroft.text_parser import TextParser
+
 try:
     from urlparse import urlparse
 except (ImportError):
     from urllib.parse import urlparse
 
-import requests
-import pytz
 
-from maicroft.maicroft_exceptions import UserNotFoundError, NoDataError
-from maicroft.subreddits import subreddits_dict, ignore_text_subs, default_subs
-from maicroft.text_parser import TextParser
-from maicroft.social_objects import Post, Submission, Comment
-
-"""Contains the RedditUser class, which builds a profile of a reddit
+"""
+Contains the RedditUser class, which builds a profile of a reddit
 user, trying the extraction meaningful information from the content submitted
 by them to reddit
 """
 
 parser = TextParser()
+logger = logging.getLogger(__name__)
 
 
 class Util:
