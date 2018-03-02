@@ -25,7 +25,7 @@ Setup
 
 Usage
 -----
-    python -m maicroft.core <social-platform> <platform-username>
+    python -m maicroft.core <social-platform (reddit|twitter)> <username> [--prettyprint] [--debug]
 
 Example
 -------
