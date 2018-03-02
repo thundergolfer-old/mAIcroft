@@ -6,9 +6,6 @@
 
 Extract interesting information about redditors from their submissions, comments, and subs. Outputs data in JSON format. Brother project to [Orionmelt's Sherlock](https://github.com/orionmelt/sherlock), adapting and expanding its functionality and generality.
 
-[Documentation - Read The Docs](http://maicroft.readthedocs.io/en/latest/) [In Progress]
--------------------
-
 ### Currently working on:
 *Detecting anti-social users by measuring their number of insulting comments. User comments are classified with machine learning as neutral [0] or insulting [1].* In progress at [thundergolfer/insults](https://github.com/thundergolfer/insults)
 
@@ -225,6 +222,9 @@ Processing user thundergolfer
 Processing complete... 0:00:06.084066
 ```
 
+[Documentation - Read The Docs](http://maicroft.readthedocs.io/en/latest/) [In Progress]
+-------------------
+
 License
 -------
 [LICENSE.txt](/LICENSE.txt) MIT License
@@ -233,3 +233,8 @@ The MIT License (MIT)
 Copyright (c) 2016
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+Credit
+------
+
+Credit to [orionmelt](https://github.com/orionmelt/) for [their work](https://github.com/orionmelt/sherlock) that formed the base of this project.
