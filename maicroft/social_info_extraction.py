@@ -3,11 +3,15 @@ try:
     import urlparse
 except (ImportError):
     import urllib.parse as urlparse
-import pytz
 import calendar
+import pytz
+import re
 
 from maicroft.reddit_user import Util
-from maicroft.activity_metric_proc import process_metrics, process_submission_metrics
+from maicroft.activity_metric_proc import process_metrics
+from maicroft.activity_metric_proc import process_submission_metrics
+from maicroft.subreddits import subreddits_dict, ignore_text_subs
+from maicroft.text_parser import TextParser
 
 """
 Generalising the information extraction processing of social media content.
@@ -18,11 +22,11 @@ reusable for other major social media content eg. Twitter, Facebook, LinkedIn...
 parser = TextParser()
 
 
-def antisocial_rating( user ):
+def antisocial_rating(user):
     raise NotImplementedError
 
 
-def insult_or_not( user, comment ):
+def insult_or_not(user, comment):
     raise NotImplementedError
 
 
@@ -42,14 +46,14 @@ def process_comment(user, comment):
         comment.created_utc, tz=pytz.utc
     )
 
-    process_metrics(user, comment):  # Process the comment for metrics
+    process_metrics(user, comment)  # Process the comment for metrics
 
     # If comment is in a subreddit in which comments/user text
     # are to be ignored (such as /r/jokes, /r/writingprompts, etc), do not process it further.
     if comment.subreddit in ignore_text_subs:
         return False
 
-    # TODO: This is dodgy behaviour
+    # TODO: This stopping if not I/My found is dodgy behaviour
     # If comment text does not contain "I" or "my", why even bother?
     if not re.search(r"\b(i|my)\b", text, re.I):
         return False
@@ -431,7 +435,8 @@ def derive_attributes(user):
                 "to": calendar.timegm(d2.utctimetuple()),
                 "days": (d2 - d1).seconds,
             } for d1, d2 in zip(
-                active_dates[:-1], active_dates[1:]  # compares 1st with 2nd, 2nd with 3rd, 3rd with...
+                # compares 1st with 2nd, 2nd with 3rd, 3rd with...
+                active_dates[:-1], active_dates[1:]
             )
         ], key=lambda x: x["days"]
     )
