@@ -3,6 +3,7 @@
 # Handles user interaction with maicroft program. User passes their
 # Reddit/Twitter username and program attempts to find a matching account.
 from __future__ import print_function
+from builtins import input
 import json
 import sys
 import datetime
@@ -20,16 +21,16 @@ def run_menu():
             2. Process a Twitter user
             3. Exit
         """)
-        ans = raw_input("Enter Choice: ")
+        ans = input("Enter Choice: ")
         process_menu_choice(int(ans))
 
 
 def process_menu_choice(choice):
     if choice == 1:
-        username = raw_input("Enter a reddit username: ")
+        username = input("Enter a reddit username: ")
         process_social_user(username)
     elif choice == 2:
-        username = raw_input("Enter a twitter id/screen-name")
+        username = input("Enter a twitter id/screen-name")
         process_social_user(username, platform="twitter")
     elif choice == 3:
         sys.exit()

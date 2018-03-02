@@ -3,6 +3,7 @@
 # Run 'pip install -r requirements.txt' to install these dependencies.
 praw==4.4.0
 beautifulsoup4==4.5.3
+future==0.16.0
 markdown==2.6.8
 lxml
 nose
