@@ -21,13 +21,17 @@ def process_metrics(user, comment):
     Process the part of a comment that relates to metrics.
     """
 
+    comment_timestamp = datetime.datetime.fromtimestamp(
+        comment.created_utc, tz=pytz.utc
+    )
+
     user.commented_dates.append(comment_timestamp)
     user.comments_gilded += comment.gilded
 
     days_ago_60 = user.today - datetime.timedelta(60)
     if (comment_timestamp.date() - days_ago_60).days > 0:
         user.metrics["heatmap"][
-            (comment_timestamp.date() - days_ago_60).days*24 + \
+            (comment_timestamp.date() - days_ago_60).days*24 +
             comment_timestamp.hour
         ] += 1
         user.metrics["recent_karma"][
