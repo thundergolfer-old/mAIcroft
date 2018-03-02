@@ -33,7 +33,7 @@ Command:
 
     python -m maicroft.core reddit thundergolfer
 
-Output:
+Output (truncated in parts for brevity):
 ```
 
 Processing user thundergolfer
@@ -44,10 +44,6 @@ Processing user thundergolfer
     "submissions": {
       "count": 15,
       "gilded": 0,
-      "worst": {
-        "permalink": "http:\/\/www.reddit.com\/r\/sandbox\/comments\/3ej437rl\/test_post_please_ignore\/",
-        "title": "Test post, please ignore"
-      },
       "average_karma": 63,
       "computed_karma": 1832,
       "type_domain_breakdown": {
@@ -63,54 +59,23 @@ Processing user thundergolfer
               ....
             ]
           },
-          {
-            "name": "Image",
-            "children": [
-
-            ]
-          },
-          {
-            "name": "Video",
-            "children": [
-
-            ]
-          },
-          {
-            "name": "Other",
-            "children": [
-              {
-                "name": "snoopsnoo.com",
-                "size": 7
-              },
-              {
-                "name": "triviusgame.com",
-                "size": 1
-              },
-              {
-                "name": "blog.snoopsnoo.com",
-                "size": 5
-              }
-            ]
-          }
         ]
       },
-      "best": {
-        "permalink": "http:\/\/www.reddit.com\/r\/dataisbeautiful\/comments\/2r3jnk\/your_reddit_activity_analyzed_and_visualized_oc\/",
-        "title": "Your reddit activity, analyzed and visualized [OC]"
+      "worst": {
+        "permalink": "http:\/\/www.reddit.com\/r\/sandbox\/comments\/3ej437rl\/test_post_please_ignore\/",
+        "title": "Test post, please ignore"
       },
+      "best": { ... },
       "all_time_karma": 1070
     },
     "signup_date": 1404973258,
     "comments": {
       "worst": {
-        "text": "Just refreshed your SnoopSnoo profile, and it looks like it is now caught up with most of what you mentioned. :)",
-        "permalink": "http:\/\/www.reddit.com\/r\/dataisbeautiful\/comments\/46xd0w\/_\/d0bb25n"
+        "text": "fake worst comment ayylamo. :)",
+        "permalink": "http:\/\/www.reddit.com\/r\/thedeathlyhallows\/comments\/46xd0w\/_\/d0bb25n"
       },
+      "best": { ... },
       "average_karma": 3,
-      "best": {
-        "text": "I built this site and posted on \/r\/dataisbeautiful and someone suggested that I crosspost it here. Feedback and criticism are welcome!",
-        "permalink": "http:\/\/www.reddit.com\/r\/secretsanta\/comments\/2r7xhr\/_\/cnd9lyd"
-      },
       "count": 431,
       "gilded": 1,
       "hours_typed": 5.98,
@@ -118,218 +83,11 @@ Processing user thundergolfer
       "total_word_count": 14344,
       "karma_per_word": 0.09
     },
-    "lurk_period": {
-      "to": 1428638447,
-      "from": 1426913740
-    }
   },
-  "metrics": {
-    "topic": {
-      "name": "All",
-      "children": [
-        {
-          "name": "Technology",
-          "children": [
-            {
-              "name": "Internet",
-              "children": [
-                {
-                  "name": "Generic",
-                  "size": 129
-                }
-              ]
-            },
-            {
-              "name": "Data",
-              "children": [
-                {
-                  "name": "Data Visualization",
-                  "size": 37
-                }
-              ]
-            },
-            {
-              "name": "Programming",
-              "children": [
-                {
-                  "name": "Python",
-                  "size": 28
-                },
-                {
-                  "name": "Generic",
-                  "size": 11
-                },
-                {
-                  "name": "Web Development",
-                  "size": 2
-                }
-              ]
-            },
-            {
-              "name": "Software",
-              "children": [
-                {
-                  "name": "Chrome",
-                  "size": 2
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Other",
-          "size": 49
-        },
-        {
-          "name": "Lifestyle",
-          "children": [
-            {
-              "name": "Gifts and Charity",
-              "children": [
-                {
-                  "name": "Generic",
-                  "size": 37
-                }
-              ]
-            },
-            {
-              "name": "Self-help and Motivation",
-              "children": [
-                {
-                  "name": "Generic",
-                  "size": 7
-                }
-              ]
-            },
-            {
-              "name": "Relationships",
-              "children": [
-                {
-                  "name": "Generic",
-                  "size": 6
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "News and Politics",
-          "children": [
-            {
-              "name": "Generic",
-              "children": [
-                {
-                  "name": "Generic",
-                  "size": 3
-                }
-              ]
-            },
-            {
-              "name": "World News",
-              "children": [
-                {
-                  "name": "Generic",
-                  "size": 2
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Entertainment",
-          "children": [
-            {
-              "name": "Television",
-              "children": [
-                {
-                  "name": "Psych",
-                  "size": 3
-                },
-                {
-                  "name": "Seinfeld",
-                  "size": 2
-                },
-                {
-                  "name": "British TV",
-                  "size": 1
-                }
-              ]
-            },
-          ]
-        },
-        {
-          "name": "Locations",
-          "children": [
-            {
-              "name": "World",
-              "children": [
-                {
-                  "name": "Singapore",
-                  "size": 1
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Sports",
-          "children": [
-            {
-              "name": "Hockey",
-              "children": [
-                {
-                  "name": "New Jersey Devils",
-                  "size": 1
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
+  "metrics": { ... },
     "recent_karma": [0,1,22,0,...,0],
-    "weekday": [
-      {
-        "submission_karma": 28,
-        "posts": 103,
-        "comments": 99,
-        "comment_karma": 229,
-        "weekday": "Sun",
-        "submissions": 4,
-        "karma": 257
-      },
-      ...
-      {
-        "submission_karma": 6,
-        "posts": 56,
-        "comments": 54,
-        "comment_karma": 171,
-        "weekday": "Sat",
-        "submissions": 2,
-        "karma": 177
-      }
-    ],
-    "hour": [
-      {
-        "submission_karma": 0,
-        "hour": 0,
-        "posts": 24,
-        "comments": 24,
-        "comment_karma": 96,
-        "karma": 96,
-        "submissions": 0
-      },
-      ...
-      {
-        "submission_karma": 3,
-        "hour": 23,
-        "posts": 24,
-        "comments": 23,
-        "comment_karma": 54,
-        "karma": 57,
-        "submissions": 1
-      }
-    ],
+    "weekday": [ ... ],
+    "hour": [ ... ],
     "recent_activity_heatmap": "000100...1010",
     "date": [
       {
@@ -361,90 +119,10 @@ Processing user thundergolfer
         "text": "data",
         "size": 58
       },
-
-        "size": 17
-      },
       ...
     ],
     "recent_posts": [],
-    "subreddit": {
-      "name": "All",
-      "children": [
-        {
-          "name": "Gaming",
-          "children": [
-            {
-              "submission_karma": 0,
-              "name": "IndieGaming",
-              "posts": 1,
-              "comments": 1,
-              "comment_karma": 1,
-              "karma": 1,
-              "submissions": 0
-            },
-            ...
-            {
-              "submission_karma": 1,
-              "name": "DestinyTheGame",
-              "posts": 1,
-              "comments": 0,
-              "comment_karma": 0,
-              "karma": 1,
-              "submissions": 1
-            }
-          ]
-        },
-        {
-          "name": "Lifestyle",
-          "children": [
-            {
-              "submission_karma": 0,
-              "name": "Mydaily3",
-              "posts": 7,
-              "comments": 7,
-              "comment_karma": 14,
-              "karma": 14,
-              "submissions": 0
-            },
-            ...
-            {
-              "submission_karma": 1,
-              "name": "Favors",
-              "posts": 1,
-              "comments": 0,
-              "comment_karma": 0,
-              "karma": 1,
-              "submissions": 1
-            }
-          ]
-        },
-        ...
-        {
-          "name": "Entertainment",
-          "children": [
-            {
-              "submission_karma": 179,
-              "name": "harrypotter",
-              "posts": 3,
-              "comments": 2,
-              "comment_karma": 8,
-              "karma": 187,
-              "submissions": 1
-            },
-            ...
-            {
-              "submission_karma": 7,
-              "name": "blackmirror",
-              "posts": 1,
-              "comments": 0,
-              "comment_karma": 0,
-              "karma": 7,
-              "submissions": 1
-            }
-          ]
-        },
-      ]
-    }
+    "subreddit": { ... }
   },
   "synopsis": {
     "television": {
@@ -481,22 +159,6 @@ Processing user thundergolfer
           ],
           "value": "site"
         },
-        {
-          "count": 11,
-          "sources": [
-            "http:\/\/www.reddit.com\/r\/InternetIsBeautiful\/comments\/33fepc\/_\/cqkjp9g",
-            "http:\/\/www.reddit.com\/r\/AdviceAnimals\/comments\/30hxhr\/_\/cpt4b4l",
-            ...
-          ],
-          "value": "program"
-        },
-        {
-          "count": 1,
-          "sources": [
-            "http:\/\/www.reddit.com\/r\/SnoopSnoo\/comments\/3yp4n8\/_\/cyfhqw7"
-          ],
-          "value": "cc"
-        },
         ...
       ]
     },
@@ -525,13 +187,7 @@ Processing user thundergolfer
           ],
           "value": "redditinvestigator"
         },
-        {
-          "count": 1,
-          "sources": [
-            "http:\/\/www.reddit.com\/r\/EVEX\/comments\/2ztguf\/_\/cpr5v4c"
-          ],
-          "value": "web development"
-        }
+        ...
       ]
     },
     "attributes": {
@@ -543,7 +199,7 @@ Processing user thundergolfer
             "http:\/\/www.reddit.com\/r\/InternetIsBeautiful\/comments\/2wstiw\/_\/cou7p6f",
             "http:\/\/www.reddit.com\/r\/programming\/comments\/2qx5ij\/_\/cnaueqc"
           ],
-          "value": "developer of this site"
+          "value": "winner"
         },
         ...
         {
