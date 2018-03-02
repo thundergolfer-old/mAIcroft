@@ -3,6 +3,7 @@
 # Handles user interaction with maicroft program. User passes their
 # Reddit/Twitter username and program attempts to find a matching account.
 from __future__ import print_function
+import argparse
 from builtins import input
 import json
 import sys
@@ -65,17 +66,29 @@ def process_social_user(username, platform="Reddit", prettyprint=False):
 
 
 def main():
-    prettyPrint = False
-    if len(sys.argv) > 2:
-        plat = sys.argv[1]
-        username = sys.argv[2]
-    elif len(sys.argv) == 4 and sys.argv[3] == '--prettyprint':
-        prettyPrint = True
-    elif len(sys.argv) == 1:
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('platform', type=str,
+                        help='which social platform the account is attached to (Reddit or Twitter)')
+    parser.add_argument('username', type=str,
+                        help='the account id')
+    parser.add_argument('--debug', dest='debug', action='store_true',
+                        help='output debugging logs from program')
+    parser.add_argument('--prettyprint', dest='prettyprint', action='store_true',
+                        help='output json is prettyprint (default: False)')
+
+    parser.set_defaults(prettyprint=False, debug=False)
+    if len(sys.argv) == 1:
         run_menu()
     else:
+        args = parser.parse_args()
+
+    if (args.platform and not args.username) or (not args.platform and args.username):
         sys.exit("Usage: python <program> <SOCIAL PLATFORM> <USERNAME> [--prettyprint]")
-    process_social_user(username, platform=plat, prettyprint=prettyPrint)
+    else:
+        plat = args.platform
+        username = args.username
+
+    process_social_user(username, platform=plat, prettyprint=args.prettyprint)
 
 
 if __name__ == '__main__':
