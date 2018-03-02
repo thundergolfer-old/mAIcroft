@@ -16,10 +16,10 @@ echo "Creating/Replacing VirtualEnv"
 rm -rf $VIRTUAL_ENV_PATH
 mkdir -p "${VIRTUAL_ENV_PATH}" 2>/dev/null
 
-if PYTHON3_PATH=$(which python3); then
-    virtualenv --python=$PYTHON3_PATH $VIRTUAL_ENV_PATH
+if PYTHON_PATH=$(which python); then
+    virtualenv --python=$PYTHON_PATH $VIRTUAL_ENV_PATH
 else
-    echo "Could not find Python 3 on system. Please install it."
+    echo "Could not find Python on system. Please install it."
     exit 1
 fi
 
