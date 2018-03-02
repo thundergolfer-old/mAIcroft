@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# Handles user interaction with sherlock program. User passes their reddit username
-# and program attempts to find a reddit matching it.
+# Handles user interaction with maicroft program. User passes their
+# Reddit/Twitter username and program attempts to find a matching account.
 from __future__ import print_function
 import json
 import sys
@@ -48,6 +48,7 @@ def process_social_user(username, platform="Reddit", prettyprint=False):
             u = TwitterUser(username)
         else:
             print("Invalid platform specified.")
+            exit(1)
 
         if prettyprint:
             print(json.dumps(u, indent=4))
@@ -67,12 +68,12 @@ def main():
     if len(sys.argv) > 2:
         plat = sys.argv[1]
         username = sys.argv[2]
-    elif len(sys.argv) == 4 and sys.argv[3] == 'prettyprint':
+    elif len(sys.argv) == 4 and sys.argv[3] == '--prettyprint':
         prettyPrint = True
     elif len(sys.argv) == 1:
         run_menu()
     else:
-        sys.exit("Incorrect number of arguments\nUsage: python <program> <SOCIAL PLATFORM> <USERNAME>")
+        sys.exit("Usage: python <program> <SOCIAL PLATFORM> <USERNAME> [--prettyprint]")
     process_social_user(username, platform=plat, prettyprint=prettyPrint)
 
 

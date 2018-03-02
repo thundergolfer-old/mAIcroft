@@ -1,14 +1,3 @@
-try:
-    from urlparse import urlparse
-except (ImportError):
-    from urllib.parse import urlparse
-
-import requests
-
-from maicroft.subreddits import subreddits_dict, ignore_text_subs, default_subs
-from maicroft.text_parser import TextParser
-
-
 # Base class for comments and submissions
 class Post(object):
     """
@@ -30,6 +19,7 @@ class Post(object):
         # Permalink to post
         self.permalink = permalink
 
+
 class R_Post(Post):
     """
     A class for posts that come from Reddit
@@ -40,8 +30,11 @@ class R_Post(Post):
         super(R_Post, self).__init__(
             id, text, created_utc, score, permalink
         )
-        self.subreddit = subreddit # Subreddit in which comment or submission was posted
-        self.gilded = gilded # Reddit posts and submissions can receive "Reddit Gold"
+        # Subreddit in which comment or submission was posted
+        self.subreddit = subreddit
+        # Reddit posts and submissions can receive "Reddit Gold"
+        self.gilded = gilded
+
 
 class Comment(R_Post):
     """
@@ -129,7 +122,7 @@ class Tweet(Post):
         self.replied_to_tweet_id = replied_to_tweet_id
         self.lang = lang
         self.places = place
-        self.self_retweeted = self_retweeted # is this interesting?
+        self.self_retweeted = self_retweeted  # is this interesting?
         self.retweeted_status = retweeted_status
 
 
