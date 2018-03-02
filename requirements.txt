@@ -4,6 +4,7 @@
 praw==4.4.0
 beautifulsoup4==4.5.3
 future==0.16.0
+insults==0.1.12
 markdown==2.6.8
 lxml
 nose
