@@ -12,16 +12,10 @@ Extract interesting information about redditors from their submissions, comments
 ### Currently working on:
 *Detecting anti-social users by measuring their number of insulting comments. User comments are classified with machine learning as neutral [0] or insulting [1].* In progress at [thundergolfer/insults](https://github.com/thundergolfer/insults)
 
-Dependencies
-------------
-* [requests](http://docs.python-requests.org/en/master/)
-* [pytz](https://pypi.python.org/pypi/pytz/)
-* [TextBlob 0.9.0](http://textblob.readthedocs.org/en/dev/)
-
 Setup
 -----
-* Run `pip install -r requirements.txt` to install dependencies.
-* Run `python -m textblob.download_corpora` to download TextBlob corpora.
+1. Run `./install_package.sh` to install dependencies into a `virtualenv`.
+2. Run `python -m textblob.download_corpora` to download TextBlob corpora.
 
 Usage
 -----
