@@ -13,6 +13,7 @@ from itertools import groupby
 import pytz
 import requests
 
+from maicroft.intelligence.anti_sociality import Antisociality
 from maicroft.maicroft_exceptions import NoDataError, UserNotFoundError
 from maicroft.social_objects import Comment, Submission
 from maicroft.subreddits import default_subs, ignore_text_subs, subreddits_dict
@@ -32,6 +33,21 @@ by them to reddit
 
 parser = TextParser()
 logger = logging.getLogger(__name__)
+
+
+class RedditUserEncoder(json.JSONEncoder):
+    DATE_FORMAT = "%Y-%m-%d"
+    TIME_FORMAT = "%H:%M:%S"
+
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.strftime("%s %s" % (self.DATE_FORMAT, self.TIME_FORMAT))
+        elif isinstance(obj, Antisociality):
+            return {
+                "percentage_insults": obj.percentage_comments_that_are_insults(),
+                "highest_likelihood_insulting_comment": obj.most_likely_insult
+            }
+        return super(RedditUserEncoder, self).default(obj)
 
 
 class Util:
@@ -319,6 +335,7 @@ class RedditUser:
 
         self.favorites = []
         self.sentiments = []
+        self.anti_sociality = Antisociality()
 
         self.derived_attributes = {
             "family_members": [],
@@ -329,7 +346,7 @@ class RedditUser:
             "physical_characteristics": [],
             "political_view": [],
             "possessions": [],
-            "religion and spirituality": []
+            "religion and spirituality": [],
         }
 
         self.corpus = ""
@@ -427,7 +444,6 @@ class RedditUser:
                 more_comments = False
 
         return comments
-
 
     def get_submissions(self, limit=None):
         """
@@ -549,12 +565,17 @@ class RedditUser:
         * Sanitizes and extracts chunks from comment.
 
         """
+        logger.info('Processing comment: {}'.format(comment.id))
+
 
         # Sanitize comment text.
         text = Util.sanitize_text(comment.text)
 
         # Add comment text to corpus.
         self.corpus += text.lower()
+
+        logger.info('Running insult analysis on comment')
+        self.anti_sociality.update(text)
 
         comment_timestamp = datetime.datetime.fromtimestamp(
             comment.created_utc, tz=pytz.utc
@@ -729,7 +750,7 @@ class RedditUser:
             return False
 
         # Only process self texts that contain "I" or "my"
-        if not submission.is_self or not re.search(r"\b(i|my)\b", text,re.I):
+        if not submission.is_self or not re.search(r"\b(i|my)\b", text, re.I):
             return False
 
         (chunks, sentiments) = parser.extract_chunks(text)
@@ -1882,6 +1903,7 @@ class RedditUser:
                     "type_domain_breakdown": self.submissions_by_type
                 }
             },
+            "anti_sociality": self.anti_sociality,
             "synopsis": synopsis,
             "metrics": {
                 "date": metrics_date,
@@ -1896,7 +1918,7 @@ class RedditUser:
             }
         }
 
-        return json.dumps(results)
+        return json.dumps(results, cls=RedditUserEncoder)
 
 
 if __name__ == '__main__':

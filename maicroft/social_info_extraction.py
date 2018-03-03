@@ -21,15 +21,6 @@ reusable for other major social media content eg. Twitter, Facebook, LinkedIn...
 
 parser = TextParser()
 
-
-def antisocial_rating(user):
-    raise NotImplementedError
-
-
-def insult_or_not(user, comment):
-    raise NotImplementedError
-
-
 def process_comment(user, comment):
     """
     Process a single comment.
