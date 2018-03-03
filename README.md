@@ -30,6 +30,10 @@ Output (truncated in parts for brevity):
 Processing user thundergolfer
 {
   "username": "thundergolfer",
+  "anti_sociality": {
+    "highest_likelihood_insulting_comment": [0.40410640762253447, "No there's a difference.... "], 
+    "percentage_insults": 0
+  },
   "summary": {
     "first_post_date": 1407428328,
     "submissions": {
