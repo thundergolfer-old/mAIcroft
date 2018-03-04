@@ -4,7 +4,7 @@
 
 # mAIcroft [![Build Status](https://travis-ci.org/thundergolfer/mAIcroft.svg?branch=master)](https://travis-ci.org/thundergolfer/mAIcroft) [![Code Climate](https://codeclimate.com/github/thundergolfer/mAIcroft/badges/gpa.svg)](https://codeclimate.com/github/thundergolfer/mAIcroft) [![Test Coverage](https://codeclimate.com/github/thundergolfer/mAIcroft/badges/coverage.svg)](https://codeclimate.com/github/thundergolfer/mAIcroft/coverage)
 
-Extract interesting information about redditors from their submissions, comments, and subs. Outputs data in JSON format. Brother project to [Orionmelt's Sherlock](https://github.com/orionmelt/sherlock), adapting and expanding its functionality and generality.
+Extract interesting information about redditors and tweepies from their profile content. Outputs data in JSON format. Brother project to [Orionmelt's Sherlock](https://github.com/orionmelt/sherlock), adapting and expanding its functionality and generality.
 
 ### Currently working on:
 *Detecting anti-social users by measuring their number of insulting comments. User comments are classified with machine learning as neutral [0] or insulting [1].* In progress at [thundergolfer/insults](https://github.com/thundergolfer/insults)
