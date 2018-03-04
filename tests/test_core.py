@@ -1,6 +1,8 @@
-from mock import patch
+import sys
 from contextlib import contextmanager
 from io import StringIO
+
+from mock import patch
 
 from maicroft.core import process_social_user
 

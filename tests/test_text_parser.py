@@ -26,7 +26,8 @@ class TestTextParser(unittest.TestCase):
     def test_common_words(self):
         test_text = """
         This is some text that contains stop words and interesting words
-        aplenty. Fire and brimstone without magic or technology. The woods were darkened.
+        aplenty. Fire and brimstone without magic or technology.
+        The woods were darkened.
         """
         expected = [
             'This', 'text', 'stop', 'words', 'interesting',

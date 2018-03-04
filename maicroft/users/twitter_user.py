@@ -27,12 +27,11 @@ class TwitterUser:
     """
 
     # Set thresholds here
-    #---------------------
+    # ---------------------
 
     IMAGE_DOMAINS = ["imgur.com", "flickr.com"]
     VIDEO_DOMAINS = ["youtube.com", "youtu.be", "vimeo.com", "liveleak.com"]
     IMAGE_EXTENSIONS = ["jpg", "png", "gif", "bmp"]
-
 
     def __init__(self, user_id, json_data=None):
         # Populate username and about data
@@ -55,14 +54,14 @@ class TwitterUser:
         else:
             data = json.loads(json_data)
             self.about = {
-                "created_utc" : datetime.datetime.fromtimestamp(
+                "created_utc": datetime.datetime.fromtimestamp(
                     data["about"]["created_utc"], tz=pytz.utc
                 ),
-                "link_karma" : data["about"]["link_karma"],
-                "comment_karma" : data["about"]["comment_karma"],
-                "name" : data["about"]["name"],
-                "reddit_id" : data["about"]["id"],
-                "is_mod" : data["about"]["is_mod"]
+                "link_karma": data["about"]["link_karma"],
+                "comment_karma": data["about"]["comment_karma"],
+                "name": data["about"]["name"],
+                "reddit_id": data["about"]["id"],
+                "is_mod": data["about"]["is_mod"]
             }
 
     def __str__(self):
@@ -73,14 +72,14 @@ class TwitterUser:
         Return basic and general data about a twitter user
         """
         about = {
-            "test" : "Hehdnff",
-            "created_utc" : user.created_at, # format: datetime.datetime(2016,4,12,13,11,41)
+            "test": "Hehdnff",
+            "created_utc": user.created_at,  # format: datetime.datetime(2016,4,12,13,11,41)
             "name": user.name,
-            "screen_name" : user.screen_name,
-            "followers_count" : user.followers_count,
-            "location" : user.location,
-            "location_profile" : Location(user.profile_location),
-            "profile_img" : user.profile_image_url
+            "screen_name": user.screen_name,
+            "followers_count": user.followers_count,
+            "location": user.location,
+            "location_profile": Location(user.profile_location),
+            "profile_img": user.profile_image_url
         }
         return about
 
@@ -94,29 +93,29 @@ class TwitterUser:
         tweets.append(t)
         return tweets
 
-    def get_tweet(self,tweet):
+    def get_tweet(self, tweet):
         """
 
         """
-        TWEET_BASE_ADDR = "https://twitter.com/statuses/" # for permalink
+        TWEET_BASE_ADDR = "https://twitter.com/statuses/"  # for permalink
 
-        text = tweet.text.encode("ascii", "ignore") # text (UTF-8)
+        text = tweet.text.encode("ascii", "ignore")  # text (UTF-8)
         tweet_id = tweet.id_str.encode("ascii", "ignore")
         permalink = TWEET_BASE_ADDR + tweet_id
-        coords = tweet.coordinates # coordinates
-        created_utc = tweet.created_at # format: datetime.datetime(2011, 1, 1, 3, 15, 29)
-        entities = tweet.entities # entities
-        fave_count = tweet.favorite_count # favorite count
-        self_faved = tweet.favorited # self favourited
-        replyee_screenname = tweet.in_reply_to_screen_name # in_reply_to_screen_name
+        coords = tweet.coordinates  # coordinates
+        created_utc = tweet.created_at  # format: datetime.datetime(2011, 1, 1, 3, 15, 29)
+        entities = tweet.entities  # entities
+        fave_count = tweet.favorite_count  # favorite count
+        self_faved = tweet.favorited  # self favourited
+        replyee_screenname = tweet.in_reply_to_screen_name  # in_reply_to_screen_name
         replyee_id = tweet.in_reply_to_user_id_str.encode("ascii", "ignore") \
-                     if tweet.in_reply_to_user_id_str else None
+            if tweet.in_reply_to_user_id_str else None
         replied_to_tweet_id = tweet.in_reply_to_status_id_str.encode("ascii", "ignore") \
-                    if tweet.in_reply_to_status_id_str else None
-        lang = tweet.lang if tweet.lang != "und" else None # lang
-        place = tweet.place # places
+            if tweet.in_reply_to_status_id_str else None
+        lang = tweet.lang if tweet.lang != "und" else None  # lang
+        place = tweet.place  # places
         # 'quote tweets'
-        retweet_count = tweet.retweet_count # retweet count
+        retweet_count = tweet.retweet_count  # retweet count
         self_retweeted = tweet.retweeted
         # is this tweet a retweet?
         try:
@@ -176,8 +175,8 @@ class TwitterUser:
         # Interests
         # Goals
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_secret)
 

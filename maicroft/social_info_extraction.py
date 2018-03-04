@@ -7,9 +7,9 @@ import calendar
 import pytz
 import re
 
-from maicroft.reddit_user import Util
-from maicroft.activity_metric_proc import process_metrics
-from maicroft.activity_metric_proc import process_submission_metrics
+from maicroft.util import Util
+from maicroft.activity_metrics_proc import process_metrics
+from maicroft.activity_metrics_proc import process_submission_metrics
 from maicroft.subreddits import subreddits_dict, ignore_text_subs
 from maicroft.text_parser import TextParser
 
