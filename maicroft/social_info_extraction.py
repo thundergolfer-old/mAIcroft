@@ -21,6 +21,7 @@ reusable for other major social media content eg. Twitter, Facebook, LinkedIn...
 
 parser = TextParser()
 
+
 def process_comment(user, comment):
     """
     Process a single comment.
@@ -125,7 +126,7 @@ def process_submission(user, submission):
     return True
 
 
-def load_attributes(user, chunk, post):
+def load_attributes(user, chunk, post_permalink):
     """
     Given an extracted chunk, load appropriate attributes from it.
 
@@ -150,15 +151,15 @@ def load_attributes(user, chunk, post):
             relationship_partner = parser.relationship_partner(noun)
 
             if pet:
-                user.pets.append((pet, post.permalink))
+                user.pets.append((pet, post_permalink))
             elif family_member:
-                user.family_members.append((family_member, post.permalink))
+                user.family_members.append((family_member, post_permalink))
             elif relationship_partner:
                 user.relationship_partners.append(
-                    (relationship_partner, post.permalink)
+                    (relationship_partner, post_permalink)
                 )
             else:
-                user.possessions_extra.append((norm_nouns, post.permalink))
+                user.possessions_extra.append((norm_nouns, post_permalink))
 
     # Is this chunk an action?
     elif chunk["kind"] == "action" and chunk["verb_phrase"]:
@@ -229,7 +230,7 @@ def load_attributes(user, chunk, post):
                 any(n.endswith("ing") for n in norm_nouns)
             ):
                 user.attributes_extra.append(
-                    (full_noun_phrase, post.permalink)
+                    (full_noun_phrase, post_permalink)
                 )
                 return
 
@@ -241,10 +242,10 @@ def load_attributes(user, chunk, post):
                     gender = parser.gender(noun)
                     orientation = parser.orientation(noun)
                 if gender:
-                    user.genders.append((gender, post.permalink))
+                    user.genders.append((gender, post_permalink))
                 elif orientation:
                     user.orientations.append(
-                        (orientation, post.permalink)
+                        (orientation, post_permalink)
                     )
                 # Include only "am" phrases
                 elif "am" in verbs:
@@ -285,11 +286,11 @@ def load_attributes(user, chunk, post):
                 )
             ):
                 user.attributes.append(
-                    (full_noun_phrase, post.permalink)
+                    (full_noun_phrase, post_permalink)
                 )
             elif attribute:
                 user.attributes_extra.append(
-                    (full_noun_phrase, post.permalink)
+                    (full_noun_phrase, post_permalink)
                 )
 
         # I live(d) in ...
@@ -300,14 +301,14 @@ def load_attributes(user, chunk, post):
                 user.places_lived.append(
                     (
                         " ".join(prepositions) + " " + noun_phrase_text,
-                        post.permalink
+                        post_permalink
                     )
                 )
             else:
                 user.places_lived_extra.append(
                     (
                         " ".join(prepositions) + " " + noun_phrase_text,
-                        post.permalink
+                        post_permalink
                     )
                 )
 
@@ -321,7 +322,7 @@ def load_attributes(user, chunk, post):
                         " ".join(
                             [p for p in prepositions if p != "up"]
                         ) + " " + noun_phrase_text,
-                        post.permalink
+                        post_permalink
                     )
                 )
             else:
@@ -330,7 +331,7 @@ def load_attributes(user, chunk, post):
                         " ".join(
                             [p for p in prepositions if p != "up"]
                         ) + " " + noun_phrase_text,
-                        post.permalink
+                        post_permalink
                     )
                 )
 
@@ -338,11 +339,11 @@ def load_attributes(user, chunk, post):
             len(norm_verbs) == 1 and "prefer" in norm_verbs and
             norm_nouns and not determiners and not prepositions
         ):
-            user.favorites.append((full_noun_phrase, post.permalink))
+            user.favorites.append((full_noun_phrase, post_permalink))
 
         elif norm_nouns:
             actions_extra = " ".join(norm_verbs)
-            user.actions_extra.append((actions_extra, post.permalink))
+            user.actions_extra.append((actions_extra, post_permalink))
 
 
 def derive_attributes(user):

@@ -36,8 +36,8 @@ class TwitterUser:
 
     def __init__(self, user_id, json_data=None):
         # Populate username and about data
-        user = tweetAPI.get_user(user_id) # throw this away because it contains unwanted data
-        self.username = user.screen_name # screen_name is unique, "name" is not
+        user = tweetAPI.get_user(user_id)  # throw this away because it contains unwanted data
+        self.username = user.screen_name  # screen_name is unique, "name" is not
 
         self.tweets = []
         self.retweets = []
@@ -150,7 +150,7 @@ class TwitterUser:
             if tweet.retweeted_status:
                 retweet = self.get_tweet(tweet.retweeted_status)
                 retweets.append(retweet)
-        return retweets ### CAREFUL OF DOUBLE COUNTING A TWEET AND ITS RETWEET
+        return retweets  # CAREFUL OF DOUBLE COUNTING A TWEET AND ITS RETWEET
 
     def get_shares(self):
         """
@@ -182,9 +182,9 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_secret)
 
     tweetAPI = tweepy.API(auth)
-    
+
     path = ""
     name = "twitter_user"
     sys.stdout = open(path + name + ".out", "w")
-    u = TwitterUser('jonobelotti_IO') # user_id
+    u = TwitterUser('jonobelotti_IO')  # user_id
     print(u.about)

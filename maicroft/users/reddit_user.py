@@ -16,6 +16,7 @@ import requests
 from maicroft.intelligence.anti_sociality import Antisociality
 from maicroft.maicroft_exceptions import NoDataError, UserNotFoundError
 from maicroft.social_objects import Comment, Submission
+from maicroft.social_info_extraction import load_attributes
 from maicroft.subreddits import default_subs, ignore_text_subs, subreddits_dict
 from maicroft.text_parser import TextParser
 
@@ -511,7 +512,6 @@ class RedditUser:
         processes each of them.
 
         """
-
         if self.comments:
             self.process_comments()
 
@@ -566,7 +566,6 @@ class RedditUser:
 
         """
         logger.info('Processing comment: {}'.format(comment.id))
-
 
         # Sanitize comment text.
         text = Util.sanitize_text(comment.text)
@@ -762,223 +761,7 @@ class RedditUser:
         return True
 
     def load_attributes(self, chunk, post):
-        """
-        Given an extracted chunk, load appropriate attribtues from it.
-
-        """
-        # Is this chunk a possession/belonging?
-        if chunk["kind"] == "possession" and chunk["noun_phrase"]:
-            # Extract noun from chunk
-            noun_phrase = chunk["noun_phrase"]
-            noun_phrase_text = " ".join([w for w, t in noun_phrase])
-            norm_nouns = " ".join([
-                parser.normalize(w, t)
-                for w, t in noun_phrase if t.startswith("N")
-            ])
-
-            noun = next(
-                (w for w, t in noun_phrase if t.startswith("N")), None
-            )
-            if noun:
-                # See if noun is a pet, family member or a relationship partner
-                pet = parser.pet_animal(noun)
-                family_member = parser.family_member(noun)
-                relationship_partner = parser.relationship_partner(noun)
-
-                if pet:
-                    self.pets.append((pet, post.permalink))
-                elif family_member:
-                    self.family_members.append((family_member, post.permalink))
-                elif relationship_partner:
-                    self.relationship_partners.append(
-                        (relationship_partner, post.permalink)
-                    )
-                else:
-                    self.possessions_extra.append((norm_nouns, post.permalink))
-
-        # Is this chunk an action?
-        elif chunk["kind"] == "action" and chunk["verb_phrase"]:
-            verb_phrase = chunk["verb_phrase"]
-            verb_phrase_text = " ".join([w for w, t in verb_phrase])
-
-            # Extract verbs, adverbs, etc from chunk
-            norm_adverbs = [
-                parser.normalize(w, t)
-                for w, t in verb_phrase if t.startswith("RB")
-            ]
-            adverbs = [w.lower() for w, t in verb_phrase if t.startswith("RB")]
-
-            norm_verbs = [
-                parser.normalize(w, t)
-                for w, t in verb_phrase if t.startswith("V")
-            ]
-            verbs = [w.lower() for w, t in verb_phrase if t.startswith("V")]
-
-            prepositions = [w for w, t in chunk["prepositions"]]
-
-            noun_phrase = chunk["noun_phrase"]
-
-            noun_phrase_text = " ".join(
-                [w for w, t in noun_phrase if t not in ["DT"]]
-            )
-            norm_nouns = [
-                parser.normalize(w, t)
-                for w, t in noun_phrase if t.startswith("N")
-            ]
-            proper_nouns = [w for w, t in noun_phrase if t == "NNP"]
-            determiners = [
-                parser.normalize(w, t)
-                for w, t in noun_phrase if t.startswith("DT")
-            ]
-
-            prep_noun_phrase = chunk["prep_noun_phrase"]
-            prep_noun_phrase_text = " ".join([w for w, t in prep_noun_phrase])
-            pnp_prepositions = [
-                w.lower() for w, t in prep_noun_phrase if t in ["TO", "IN"]
-            ]
-            pnp_norm_nouns = [
-                parser.normalize(w, t)
-                for w, t in prep_noun_phrase if t.startswith("N")
-            ]
-            pnp_determiners = [
-                parser.normalize(w, t)
-                for w, t in prep_noun_phrase if t.startswith("DT")
-            ]
-
-            full_noun_phrase = (
-                noun_phrase_text + " " + prep_noun_phrase_text
-            ).strip()
-
-            # TODO - Handle negative actions (such as I am not...),
-            # but for now:
-            if any(
-                w in ["never", "no", "not", "nothing"]
-                for w in norm_adverbs+determiners
-            ):
-                return
-
-            # I am/was ...
-            if (len(norm_verbs) == 1 and "be" in norm_verbs and not prepositions and noun_phrase):
-                # Ignore gerund nouns for now
-                if (
-                    "am" in verbs and
-                    any(n.endswith("ing") for n in norm_nouns)
-                ):
-                    self.attributes_extra.append(
-                        (full_noun_phrase, post.permalink)
-                    )
-                    return
-
-                attribute = []
-                for noun in norm_nouns:
-                    gender = None
-                    orientation = None
-                    if "am" in verbs:
-                        gender = parser.gender(noun)
-                        orientation = parser.orientation(noun)
-                    if gender:
-                        self.genders.append((gender, post.permalink))
-                    elif orientation:
-                        self.orientations.append(
-                            (orientation, post.permalink)
-                        )
-                    # Include only "am" phrases
-                    elif "am" in verbs:
-                        attribute.append(noun)
-
-                if attribute and (
-                    (
-                        # Include only attributes that end
-                        # in predefined list of endings...
-                        any(
-                            a.endswith(
-                                parser.include_attribute_endings
-                            ) for a in attribute
-                        ) and not (
-                            # And exclude...
-                            # ...certain lone attributes
-                            (
-                                len(attribute) == 1 and
-                                attribute[0] in parser.skip_lone_attributes and
-                                not pnp_norm_nouns
-                            )
-                            or
-                            # ...predefined skip attributes
-                            any(a in attribute for a in parser.skip_attributes)
-                            or
-                            # ...attributes that end in predefined
-                            # list of endings
-                            any(
-                                a.endswith(
-                                    parser.exclude_attribute_endings
-                                ) for a in attribute
-                            )
-                        )
-                    ) or
-                    (
-                        # And include special attributes with different endings
-                        any(a in attribute for a in parser.include_attributes)
-                    )
-                ):
-                    self.attributes.append(
-                        (full_noun_phrase, post.permalink)
-                    )
-                elif attribute:
-                    self.attributes_extra.append(
-                        (full_noun_phrase, post.permalink)
-                    )
-
-            # I live(d) in ...
-            elif "live" in norm_verbs and prepositions and norm_nouns:
-                if any(
-                    p in ["in", "near", "by"] for p in prepositions
-                ) and proper_nouns:
-                    self.places_lived.append(
-                        (
-                            " ".join(prepositions) + " " + noun_phrase_text,
-                            post.permalink
-                        )
-                    )
-                else:
-                    self.places_lived_extra.append(
-                        (
-                            " ".join(prepositions) + " " + noun_phrase_text,
-                            post.permalink
-                        )
-                    )
-
-            # I grew up in ...
-            elif "grow" in norm_verbs and "up" in prepositions and norm_nouns:
-                if any(
-                    p in ["in", "near", "by"] for p in prepositions
-                ) and proper_nouns:
-                    self.places_grew_up.append(
-                        (
-                            " ".join(
-                                [p for p in prepositions if p != "up"]
-                            ) + " " + noun_phrase_text,
-                            post.permalink
-                        )
-                    )
-                else:
-                    self.places_grew_up_extra.append(
-                        (
-                            " ".join(
-                                [p for p in prepositions if p != "up"]
-                            ) + " " + noun_phrase_text,
-                            post.permalink
-                        )
-                    )
-
-            elif(
-                len(norm_verbs) == 1 and "prefer" in norm_verbs and
-                norm_nouns and not determiners and not prepositions
-            ):
-                self.favorites.append((full_noun_phrase, post.permalink))
-
-            elif norm_nouns:
-                actions_extra = " ".join(norm_verbs)
-                self.actions_extra.append((actions_extra, post.permalink))
+        load_attributes(self, chunk, post.permalink)
 
     def derive_attributes(self):
         """
@@ -1280,7 +1063,6 @@ class RedditUser:
                         ]
                     }
                 )
-
 
         metrics_topic = {
             "name": "All",
