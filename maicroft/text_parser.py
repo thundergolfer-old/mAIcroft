@@ -132,7 +132,7 @@ class TextParser:
         """
 
         word = word.lower()
-        if re.match(r"\b(dog|cat|hamster|fish|pig|snake|rat|parrot)\b", word):
+        if re.match(r"\b(dog|cat|hamster|fish|pig|snake|rat|parrot|puppy|kitten)\b", word):
             return word  # TODO:// make the pet_animal function smarter
         else:
             return None
